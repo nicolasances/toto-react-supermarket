@@ -9,7 +9,7 @@ const googleImage = require('../../img/google-logo.png');
  * Requires:
  * - onLogin            : a callback function called when the user clicks on the login button
  */
-export default class LoginComponent extends Component {
+export default class TotoLoginComponent extends Component {
 
   constructor(props) {
     super(props);
