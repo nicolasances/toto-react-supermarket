@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions} from 'react-native';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 import TotoTitleBar from '../widgets/TotoTitleBar';
 import * as theme from '../styles/ThemeColors';
 

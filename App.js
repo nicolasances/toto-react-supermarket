@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import {View, StyleSheet} from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import * as theme from './js/styles/ThemeColors';
-import TotoSignIn from './js/services/TotoSignIn';
-import TotoLoginComponent from './js/components/TotoLoginComponent';
+import TRC from 'toto-react-components';
 
 // Navigation import
 import HomeScreen from './js/screens/HomeScreen';
@@ -36,7 +35,7 @@ export default class App extends Component {
     super(props);
 
     // Instantiate the sign in utility
-    this.totoSignIn = new TotoSignIn(clientId);
+    this.totoSignIn = new TRC.TotoSignIn(clientId);
 
     // Init so that the signed in check is set as 'in progress'
     this.state = {
@@ -91,7 +90,7 @@ export default class App extends Component {
     // If the user isn't signed in, return a login page
     if (!this.state.isSignedIn) return (
       <View style={styles.loginContainer}>
-        <TotoLoginComponent onLogin={this.onLogin} />
+        <TRC.TotoLoginComponent onLogin={this.onLogin} />
       </View>
     )
 
