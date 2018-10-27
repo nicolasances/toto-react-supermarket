@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, AppState} from 'react-native';
 import { createStackNavigator } from 'react-navigation';
-import * as theme from './js/styles/ThemeColors';
 import TRC from 'toto-react-components';
 
 // Navigation import
@@ -21,7 +20,7 @@ const RootStack = createStackNavigator({
   initialRouteName: 'HomeScreen',
   navigationOptions: {
     headerStyle: {
-      backgroundColor: theme.color().COLOR_THEME,
+      backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
     },
   }
 });
@@ -50,6 +49,7 @@ export default class App extends Component {
 
       // If there is a result && the result is the user info (and not false)
       if (result != null && result != false) {
+        // Update the state and set the user info
         this.setState({
           isSignedIn: true,
           result // userInfo
@@ -57,11 +57,13 @@ export default class App extends Component {
       }
       // If the result is false then it means the user is not logged in
       else {
+        // Update the state and set as "not signed in"
         this.setState({
           isSignedIn: false
         })
       }
     });
+
   }
 
   /**
@@ -70,7 +72,7 @@ export default class App extends Component {
   onLogin() {
 
     this.totoSignIn.signIn().then((userInfo) => {
-
+      // Update the state with the user info
       this.setState({
         userInfo,
         isSignedIn: true
@@ -102,21 +104,15 @@ export default class App extends Component {
   }
 }
 
-
-
+/**
+ * Styles for the app
+ */
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignContent: 'flex-start',
-    backgroundColor: theme.color().COLOR_THEME,
-  },
   loginContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.color().COLOR_THEME,
+    backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
   }
 
 });

@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions} from 'react-native';
-import TotoTitleBar from '../widgets/TotoTitleBar';
-import * as theme from '../styles/ThemeColors';
+import TRC from 'toto-react-components';
+
+console.log('AAAAAAAAAAAAAAAAAAAAAAAA');
+console.log(TRC);
 
 export default class HomeScreen extends Component<Props> {
 
@@ -9,7 +11,7 @@ export default class HomeScreen extends Component<Props> {
     static navigationOptions = ({navigation}) => {
 
       return {
-        headerTitle: <TotoTitleBar
+        headerTitle: <TRC.TotoTitleBar
                         title='Supermarket'
                         />
       }
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignContent: 'flex-start',
-    backgroundColor: theme.color().COLOR_THEME,
+    backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
   },
 
 });

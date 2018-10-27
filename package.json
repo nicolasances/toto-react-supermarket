@@ -7,12 +7,13 @@
     "test": "jest"
   },
   "dependencies": {
+    "memoize-one": "^4.0.2",
     "moment": "^2.22.2",
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.3",
     "react-native-google-signin": "^1.0.0-rc6",
     "react-navigation": "^2.18.0",
-    "toto-react-components": "1.5.9"
+    "toto-react-components": "1.8.0"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",
