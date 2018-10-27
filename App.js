@@ -20,6 +20,7 @@ const RootStack = createStackNavigator({
   initialRouteName: 'HomeScreen',
   navigationOptions: {
     headerStyle: {
+      elevation: 0,
       backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
     },
   }

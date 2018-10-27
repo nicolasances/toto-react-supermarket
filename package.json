@@ -13,7 +13,7 @@
     "react-native": "0.57.3",
     "react-native-google-signin": "^1.0.0-rc6",
     "react-navigation": "^2.18.0",
-    "toto-react-components": "1.8.0"
+    "toto-react-components": "1.8.1"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

@@ -28,6 +28,16 @@ export default class HomeScreen extends Component<Props> {
 
     return (
       <View style={styles.container}>
+
+        <View style={styles.addContainer}>
+          <View style={styles.addButton}>
+            <Image style={styles.addImage} source={require('../../img/add.png')} />
+          </View>
+        </View>
+
+        <View style={styles.listContainer}>
+        </View>
+
       </View>
     );
   }
@@ -41,5 +51,26 @@ const styles = StyleSheet.create({
     alignContent: 'flex-start',
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
   },
-
+  addContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 48,
+  },
+  addButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderColor: TRC.TotoTheme.theme.COLOR_ACCENT,
+    borderWidth: 3,
+  },
+  addImage: {
+    tintColor: TRC.TotoTheme.theme.COLOR_ACCENT,
+    width: 48,
+    height: 48,
+  },
+  listContainer: {
+    flex: 1,
+  }
 });
