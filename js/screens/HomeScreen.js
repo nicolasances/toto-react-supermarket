@@ -2,9 +2,6 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions} from 'react-native';
 import TRC from 'toto-react-components';
 
-console.log('AAAAAAAAAAAAAAAAAAAAAAAA');
-console.log(TRC);
-
 export default class HomeScreen extends Component<Props> {
 
     // Define the Navigation options
