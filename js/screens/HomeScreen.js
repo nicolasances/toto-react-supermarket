@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, StatusBar, TextInput, FlatList} from 'react-native';
+import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, StatusBar, TextInput, FlatList, Keyboard} from 'react-native';
 import TRC from 'toto-react-components';
 import CurrentSupermarketListPreview from '../components/CurrentSupermarketListPreview';
 import TotoIconButton from '../components/TotoIconButton';
@@ -29,6 +29,7 @@ export default class HomeScreen extends Component<Props> {
     super(props);
 
     this.state = {
+      currentListOpacity: 1,
       commonItems: [
         {name: 'Chicken'},
         {name: 'Milk'},
@@ -37,6 +38,43 @@ export default class HomeScreen extends Component<Props> {
         {name: 'Broccoli'},
       ]
     }
+
+    // Bindings
+    this.showCurrentList = this.showCurrentList.bind(this);
+    this.hideCurrentList = this.hideCurrentList.bind(this);
+  }
+
+  /**
+   * When the component mount
+   */
+  componentDidMount() {
+    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.hideCurrentList);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.showCurrentList);
+  }
+
+  componentWillUnmount() {
+    this.keyboardWillShowListener.remove();
+    this.keyboardDidHideListener.remove();
+  }
+
+  /**
+   * Shows the current supermarket list
+   */
+  hideCurrentList() {
+
+    this.setState({
+      currentListOpacity: 0
+    })
+  }
+
+  /**
+   * Hides the current supermarket list
+   */
+  showCurrentList() {
+
+    this.setState({
+      currentListOpacity: 1
+    })
   }
 
   /**
@@ -55,11 +93,12 @@ export default class HomeScreen extends Component<Props> {
             <Image style={styles.addSomeImage} source={require('../../img/write.png')} />
             <TextInput
               style={styles.addSomeText}
-              onChangeText={this.onChangeName}
               keyboardType='default'
               autoCapitalize='sentences'
               placeholder='Add some to the supermarket list!'
               placeholderTextColor={TRC.TotoTheme.theme.COLOR_TEXT + '50'}
+              onFocus={this.hideCurrentList}
+              onBlur={this.showCurrentList}
               />
           </View>
 
@@ -72,7 +111,7 @@ export default class HomeScreen extends Component<Props> {
 
         </View>
 
-        <View style={styles.currentListContainer}>
+        <View style={[styles.currentListContainer, {opacity: this.state.currentListOpacity}]}>
           <CurrentSupermarketListPreview />
         </View>
 
