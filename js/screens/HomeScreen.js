@@ -1,6 +1,14 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions} from 'react-native';
+import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, StatusBar, TextInput, FlatList} from 'react-native';
 import TRC from 'toto-react-components';
+import CurrentSupermarketListPreview from '../components/CurrentSupermarketListPreview';
+import TotoIconButton from '../components/TotoIconButton';
+
+const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
+
+const largeDevice = windowWidth > 600 ? true : false;
+
 
 export default class HomeScreen extends Component<Props> {
 
@@ -9,7 +17,7 @@ export default class HomeScreen extends Component<Props> {
 
       return {
         headerTitle: <TRC.TotoTitleBar
-                        title='Supermarket'
+                        title='Supermarket List'
                         />
       }
     }
@@ -19,6 +27,16 @@ export default class HomeScreen extends Component<Props> {
    */
   constructor(props) {
     super(props);
+
+    this.state = {
+      commonItems: [
+        {name: 'Chicken'},
+        {name: 'Milk'},
+        {name: 'Eggs'},
+        {name: 'Zucchine'},
+        {name: 'Broccoli'},
+      ]
+    }
   }
 
   /**
@@ -29,13 +47,33 @@ export default class HomeScreen extends Component<Props> {
     return (
       <View style={styles.container}>
 
-        <View style={styles.addContainer}>
-          <View style={styles.addButton}>
-            <Image style={styles.addImage} source={require('../../img/add.png')} />
+        <StatusBar backgroundColor={TRC.TotoTheme.theme.COLOR_THEME} barStyle="light-content" />
+
+        <View style={{flex: 1, alignItems: 'center'}}>
+
+          <View style={styles.addSomeContainer}>
+            <Image style={styles.addSomeImage} source={require('../../img/write.png')} />
+            <TextInput
+              style={styles.addSomeText}
+              onChangeText={this.onChangeName}
+              keyboardType='default'
+              autoCapitalize='sentences'
+              placeholder='Add some to the supermarket list!'
+              placeholderTextColor={TRC.TotoTheme.theme.COLOR_TEXT + '50'}
+              />
           </View>
+
+          <FlatList style={styles.pickSomeContainer}
+                    horizontal={true}
+                    data={this.state.commonItems}
+                    renderItem={(item) => <TouchableOpacity style={styles.pickSomeItemContainer}><Text style={styles.pickSomeItemText}>{item.item.name}</Text></TouchableOpacity>}
+                    keyExtractor={(item, index) => 'picksomeitem-' + index + '-' + Math.random()}
+                    />
+
         </View>
 
-        <View style={styles.listContainer}>
+        <View style={styles.currentListContainer}>
+          <CurrentSupermarketListPreview />
         </View>
 
       </View>
@@ -51,26 +89,36 @@ const styles = StyleSheet.create({
     alignContent: 'flex-start',
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
   },
-  addContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 48,
+  currentListContainer: {
+    height: 250,
   },
-  addButton: {
+  addSomeContainer: {
+    marginVertical: 24,
     alignItems: 'center',
-    justifyContent: 'center',
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderColor: TRC.TotoTheme.theme.COLOR_ACCENT,
-    borderWidth: 3,
   },
-  addImage: {
-    tintColor: TRC.TotoTheme.theme.COLOR_ACCENT,
+  addSomeImage: {
     width: 48,
     height: 48,
+    tintColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
+    marginBottom: 12,
   },
-  listContainer: {
-    flex: 1,
-  }
+  addSomeText: {
+    fontSize: 16,
+    borderBottomColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
+    borderBottomWidth: 1,
+    paddingBottom: 6
+  },
+  pickSomeItemContainer: {
+    margin: 6,
+    paddingHorizontal: 12,
+    height: largeDevice ? 40 : 30,
+    borderRadius: largeDevice ? 20 : 115,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: TRC.TotoTheme.theme.COLOR_THEME_LIGHT,
+  },
+  pickSomeItemText: {
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    fontSize: largeDevice ? 16 : 14,
+  },
 });
