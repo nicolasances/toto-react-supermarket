@@ -3,6 +3,8 @@ import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, S
 import TRC from 'toto-react-components';
 import CurrentSupermarketListPreview from '../components/CurrentSupermarketListPreview';
 import TotoIconButton from '../components/TotoIconButton';
+import SupermarketAPI from '../services/SupermarketAPI';
+import * as config from '../Config';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -30,31 +32,77 @@ export default class HomeScreen extends Component<Props> {
 
     this.state = {
       currentListOpacity: 1,
-      commonItems: [
-        {name: 'Chicken'},
-        {name: 'Milk'},
-        {name: 'Eggs'},
-        {name: 'Zucchine'},
-        {name: 'Broccoli'},
-      ]
+      commonItems: []
     }
 
     // Bindings
     this.showCurrentList = this.showCurrentList.bind(this);
     this.hideCurrentList = this.hideCurrentList.bind(this);
+    this.addCustomItem = this.addCustomItem.bind(this);
+    this.addCommonItemToList = this.addCommonItemToList.bind(this);
+    this.onItemAdded = this.onItemAdded.bind(this);
+    this.onItemRemoved = this.onItemRemoved.bind(this);
+
+    // Load the commonly used items
+    this.loadCommonItems();
   }
 
   /**
    * When the component mount
    */
   componentDidMount() {
+    // Add keyboard listeners
     this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.hideCurrentList);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.showCurrentList);
+
+    // Add event listeners
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.itemAdded, this.onItemAdded);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.itemRemoved, this.onItemRemoved);
   }
 
   componentWillUnmount() {
     this.keyboardWillShowListener.remove();
     this.keyboardDidHideListener.remove();
+
+    // REmove event listeners
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.itemAdded, this.onItemAdded);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.itemRemoved, this.onItemRemoved);
+  }
+
+  /**
+   * Loads the common items
+   */
+  loadCommonItems() {
+
+    // Call the API
+    new SupermarketAPI().getCommonItems().then((data) => {
+
+      // Update the state
+      this.commonItems = data.items;
+
+      // Filter out the components that are already in the supermarket list
+      new SupermarketAPI().getItemsFromCurrentList().then((data) => {
+
+        if (data == null || data.items == null) return;
+
+        for (var i = 0; i < data.items.length; i++) {
+
+          let item = data.items[i];
+
+          for (var j = 0; j < this.commonItems.length; j++) {
+
+            // If the item is in the common items list, remove the common item
+            if (this.commonItems[j].name == item.name)
+              this.commonItems.splice(j, 1);
+
+          }
+        }
+
+        // Update the state by updating the common items
+        this.setState({commonItems: []}, () => {this.setState({commonItems: this.commonItems})});
+
+      });
+    });
   }
 
   /**
@@ -78,6 +126,54 @@ export default class HomeScreen extends Component<Props> {
   }
 
   /**
+   * Adds a custom item to the supermarket list
+   */
+  addCustomItem() {
+
+    // Save the new custom item to the supermarket list
+    new SupermarketAPI().postItemInCurrentList({name: this.state.customItemName}).then((data) => {
+      // Post an event to notify that the item has been added
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.itemAdded});
+
+      // Clear the text field
+      this._textInput.setNativeProps({text: ''});
+    });
+
+  }
+
+  /**
+   * Adds the common item to the supermarket list
+   */
+  addCommonItemToList(item) {
+
+    new SupermarketAPI().postItemInCurrentList({name: item.item.name}).then((data) => {
+      // Post an event to notify that the item has been added
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.itemAdded, context: {item: item.item.name}});
+    });
+
+  }
+
+  /**
+   * Reacts to items added to the supermarket list.
+   * Basically:
+   * - if the item added is a common item, remove it from the common items list
+   */
+  onItemAdded(event) {
+
+    // If the item added is a common item, refresh the common items list (to have it removed)
+    if (event.context != null && event.context.item != null) this.loadCommonItems()
+  }
+
+  /**
+   * React to receiving the "item removed" event by refreshing the list
+   * of common items
+   */
+  onItemRemoved(event) {
+    // Refresh
+    this.loadCommonItems()
+  }
+
+  /**
    * Renders the home screen
    */
   render() {
@@ -93,19 +189,22 @@ export default class HomeScreen extends Component<Props> {
             <Image style={styles.addSomeImage} source={require('../../img/write.png')} />
             <TextInput
               style={styles.addSomeText}
+              ref={component => this._textInput = component}
               keyboardType='default'
               autoCapitalize='sentences'
               placeholder='Add some to the supermarket list!'
               placeholderTextColor={TRC.TotoTheme.theme.COLOR_TEXT + '50'}
               onFocus={this.hideCurrentList}
               onBlur={this.showCurrentList}
+              onChangeText={(text) => {this.setState({customItemName: text})}}
+              onSubmitEditing={this.addCustomItem}
               />
           </View>
 
           <FlatList style={styles.pickSomeContainer}
                     horizontal={true}
                     data={this.state.commonItems}
-                    renderItem={(item) => <TouchableOpacity style={styles.pickSomeItemContainer}><Text style={styles.pickSomeItemText}>{item.item.name}</Text></TouchableOpacity>}
+                    renderItem={(item) => <TouchableOpacity style={styles.pickSomeItemContainer} onPress={() => {this.addCommonItemToList(item)}}><Text style={styles.pickSomeItemText}>{item.item.name}</Text></TouchableOpacity>}
                     keyExtractor={(item, index) => 'picksomeitem-' + index + '-' + Math.random()}
                     />
 
