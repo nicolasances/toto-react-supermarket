@@ -7,7 +7,8 @@ import TRC from 'toto-react-components';
  * Requires:
  * - onPress        : function called when the button is pressed
  * - secondary      : true if the button should be a secondary button
- * - Image          : the image to use
+ * - image          : the image to use
+ * - size           : (optional, default: 'm') can be 'l', 'xl', 'm'
  */
 export default class TotoIconButton extends Component {
 
@@ -23,10 +24,27 @@ export default class TotoIconButton extends Component {
    */
   render() {
 
+    let containerSize = 48;
+    let iconSize = 20;
+
+    // Change the size based on the 'size' prop
+    if (this.props.size == 'l') {
+      containerSize = 60;
+      iconSize = 32;
+    }
+    else if (this.props.size == 'xl') {
+      containerSize = 72;
+      iconSize = 38;
+    }
+
+    // Define the sizeStyles
+    let containerSizeStyle = {width: containerSize, height: containerSize, borderRadius: containerSize / 2};
+    let iconSizeStyle = {width: iconSize, height: iconSize};
+
     return (
 
-      <TouchableOpacity style={styles.container} onPress={this.props.onPress}>
-        <Image style={styles.image} source={this.props.image} />
+      <TouchableOpacity style={[styles.container, containerSizeStyle]} onPress={this.props.onPress}>
+        <Image style={[styles.image, iconSizeStyle]} source={this.props.image} />
       </TouchableOpacity>
     )
   }
@@ -38,14 +56,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
     borderColor: TRC.TotoTheme.theme.COLOR_ACCENT,
-    borderRadius: 30,
-    width: 48,
-    height: 48,
     marginHorizontal: 6,
   },
   image: {
     tintColor: TRC.TotoTheme.theme.COLOR_ACCENT,
-    width: 20,
-    height: 20,
   },
 });

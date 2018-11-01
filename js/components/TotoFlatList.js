@@ -89,7 +89,7 @@ class Item extends Component {
       }
       // If the avatar is an IMAGE
       else if (data.avatar.type == 'image') {
-        avatar = <Image source={data.avatar.value}  style={{width: 24, height: 24, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} />
+        avatar = <Image source={data.avatar.value}  style={{width: 20, height: 20, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} />
       }
       // For any other type of avatar, display nothing
       else {

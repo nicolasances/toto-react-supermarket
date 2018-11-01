@@ -3,6 +3,9 @@ import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, S
 import TRC from 'toto-react-components';
 import CurrentSupermarketListPreview from '../components/CurrentSupermarketListPreview';
 import TotoIconButton from '../components/TotoIconButton';
+import CustomItem from '../components/CustomItem';
+import SupermarketList from '../components/SupermarketList';
+import SupermarketHeader from '../components/SupermarketHeader';
 import SupermarketAPI from '../services/SupermarketAPI';
 import * as config from '../Config';
 
@@ -20,6 +23,7 @@ export default class HomeScreen extends Component<Props> {
       return {
         headerTitle: <TRC.TotoTitleBar
                         title='Supermarket List'
+                        color={TRC.TotoTheme.theme.COLOR_THEME_DARK}
                         />
       }
     }
@@ -38,7 +42,6 @@ export default class HomeScreen extends Component<Props> {
     // Bindings
     this.showCurrentList = this.showCurrentList.bind(this);
     this.hideCurrentList = this.hideCurrentList.bind(this);
-    this.addCustomItem = this.addCustomItem.bind(this);
     this.addCommonItemToList = this.addCommonItemToList.bind(this);
     this.onItemAdded = this.onItemAdded.bind(this);
     this.onItemRemoved = this.onItemRemoved.bind(this);
@@ -126,22 +129,6 @@ export default class HomeScreen extends Component<Props> {
   }
 
   /**
-   * Adds a custom item to the supermarket list
-   */
-  addCustomItem() {
-
-    // Save the new custom item to the supermarket list
-    new SupermarketAPI().postItemInCurrentList({name: this.state.customItemName}).then((data) => {
-      // Post an event to notify that the item has been added
-      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.itemAdded});
-
-      // Clear the text field
-      this._textInput.setNativeProps({text: ''});
-    });
-
-  }
-
-  /**
    * Adds the common item to the supermarket list
    */
   addCommonItemToList(item) {
@@ -181,38 +168,13 @@ export default class HomeScreen extends Component<Props> {
     return (
       <View style={styles.container}>
 
-        <StatusBar backgroundColor={TRC.TotoTheme.theme.COLOR_THEME} barStyle="light-content" />
+        <StatusBar backgroundColor={TRC.TotoTheme.theme.COLOR_THEME_DARK} barStyle="light-content" />
 
-        <View style={{flex: 1, alignItems: 'center'}}>
+        <SupermarketHeader />
 
-          <View style={styles.addSomeContainer}>
-            <Image style={styles.addSomeImage} source={require('../../img/write.png')} />
-            <TextInput
-              style={styles.addSomeText}
-              ref={component => this._textInput = component}
-              keyboardType='default'
-              autoCapitalize='sentences'
-              placeholder='Add some to the supermarket list!'
-              placeholderTextColor={TRC.TotoTheme.theme.COLOR_TEXT + '50'}
-              onFocus={this.hideCurrentList}
-              onBlur={this.showCurrentList}
-              onChangeText={(text) => {this.setState({customItemName: text})}}
-              onSubmitEditing={this.addCustomItem}
-              />
-          </View>
+        <CustomItem />
 
-          <FlatList style={styles.pickSomeContainer}
-                    horizontal={true}
-                    data={this.state.commonItems}
-                    renderItem={(item) => <TouchableOpacity style={styles.pickSomeItemContainer} onPress={() => {this.addCommonItemToList(item)}}><Text style={styles.pickSomeItemText}>{item.item.name}</Text></TouchableOpacity>}
-                    keyExtractor={(item, index) => 'picksomeitem-' + index + '-' + Math.random()}
-                    />
-
-        </View>
-
-        <View style={[styles.currentListContainer, {opacity: this.state.currentListOpacity}]}>
-          <CurrentSupermarketListPreview />
-        </View>
+        <SupermarketList />
 
       </View>
     );
@@ -223,8 +185,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
-    alignContent: 'flex-start',
+    justifyContent: 'flex-start',
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
   },
   currentListContainer: {

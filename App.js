@@ -23,7 +23,7 @@ const RootStack = createStackNavigator({
   navigationOptions: {
     headerStyle: {
       elevation: 0,
-      backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
+      backgroundColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
     },
   }
 });
