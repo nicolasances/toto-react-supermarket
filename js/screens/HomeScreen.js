@@ -84,9 +84,8 @@ export default class HomeScreen extends Component<Props> {
 
     // Define the common items bar, that will be only visible
     // when you explicitly request it
-    let commonItemsBar;
-
-    if (this.state.showCommonItems) commonItemsBar = (<CommonItemsBar />);
+    let dynamicCommonItemsBar;
+    if (this.state.showCommonItems) dynamicCommonItemsBar = (<CommonItemsBar />);
 
     return (
       <View style={styles.container}>
@@ -97,7 +96,7 @@ export default class HomeScreen extends Component<Props> {
 
         <CustomItem />
 
-        {commonItemsBar}
+        {dynamicCommonItemsBar}
 
         <SupermarketList />
 
