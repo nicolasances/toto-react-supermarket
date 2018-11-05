@@ -5,4 +5,6 @@ export const AUTH = 'Basic c3RvOnRvdG8=';
 export const EVENTS = {
   itemAdded: 'itemAdded', // Item added to the current supermarket list
   itemRemoved: 'itemRemoved', // Item removed from the current supermarket list
+  commonItemsRequested: 'commonItemsRequested', // Show the common items picker
+  commonItemsDismissed: 'commonItemsDismissed', // Hide the common items picker
 }

@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, TouchableOpacity, Image, Dimensions, StatusBar, TextInput, FlatList, Keyboard} from 'react-native';
 import TRC from 'toto-react-components';
-import CurrentSupermarketListPreview from '../components/CurrentSupermarketListPreview';
 import TotoIconButton from '../components/TotoIconButton';
 import CustomItem from '../components/CustomItem';
+import CommonItemsBar from '../components/CommonItemsBar';
 import SupermarketList from '../components/SupermarketList';
 import SupermarketHeader from '../components/SupermarketHeader';
 import SupermarketAPI from '../services/SupermarketAPI';
@@ -36,14 +36,12 @@ export default class HomeScreen extends Component<Props> {
 
     this.state = {
       currentListOpacity: 1,
+      showCommonItems: false,
     }
 
     // Bindings
-    this.onItemAdded = this.onItemAdded.bind(this);
-    this.onItemRemoved = this.onItemRemoved.bind(this);
-
-    // Load the commonly used items
-    this.loadCommonItems();
+    this.showCommonItems = this.showCommonItems.bind(this);
+    this.hideCommonItems = this.hideCommonItems.bind(this);
   }
 
   /**
@@ -51,40 +49,44 @@ export default class HomeScreen extends Component<Props> {
    */
   componentDidMount() {
     // Add event listeners
-    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.itemAdded, this.onItemAdded);
-    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.itemRemoved, this.onItemRemoved);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.commonItemsRequested, this.showCommonItems)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.commonItemsDismissed, this.hideCommonItems)
   }
 
   componentWillUnmount() {
     // REmove event listeners
-    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.itemAdded, this.onItemAdded);
-    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.itemRemoved, this.onItemRemoved);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.commonItemsRequested, this.showCommonItems)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.commonItemsDismissed, this.hideCommonItems)
   }
 
   /**
-   * Reacts to items added to the supermarket list.
-   * Basically:
-   * - if the item added is a common item, remove it from the common items list
+   * Show the common items bar
    */
-  onItemAdded(event) {
-
-    // If the item added is a common item, refresh the common items list (to have it removed)
-    if (event.context != null && event.context.item != null) this.loadCommonItems()
+  showCommonItems() {
+    this.setState({
+      showCommonItems: true
+    })
   }
 
   /**
-   * React to receiving the "item removed" event by refreshing the list
-   * of common items
+   * Show the common items bar
    */
-  onItemRemoved(event) {
-    // Refresh
-    this.loadCommonItems()
+  hideCommonItems() {
+    this.setState({
+      showCommonItems: false
+    })
   }
 
   /**
    * Renders the home screen
    */
   render() {
+
+    // Define the common items bar, that will be only visible
+    // when you explicitly request it
+    let commonItemsBar;
+
+    if (this.state.showCommonItems) commonItemsBar = (<CommonItemsBar />);
 
     return (
       <View style={styles.container}>
@@ -94,6 +96,8 @@ export default class HomeScreen extends Component<Props> {
         <SupermarketHeader />
 
         <CustomItem />
+
+        {commonItemsBar}
 
         <SupermarketList />
 
