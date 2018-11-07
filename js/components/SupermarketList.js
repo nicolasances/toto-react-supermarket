@@ -7,7 +7,13 @@ import * as config from '../Config';
 
 const defaultImage = require('../../img/groceries/groceries-bag.png');
 
-export default class CustomItem extends Component {
+/**
+ * Shows the current supermarket list
+ * Props:
+ *
+ * - onItemPress      : (optional) function to be called when an item is pressed
+ */
+export default class SupermarketList extends Component {
 
   constructor(props) {
     super(props);
@@ -21,6 +27,8 @@ export default class CustomItem extends Component {
     this.loadData = this.loadData.bind(this);
     this.onItemAdded = this.onItemAdded.bind(this);
     this.createItem = this.createItem.bind(this);
+    this.onItemDeleted = this.onItemDeleted.bind(this);
+    this.onItemAdded = this.onItemAdded.bind(this);
   }
 
   /**
@@ -32,6 +40,7 @@ export default class CustomItem extends Component {
 
     // Register to events
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.itemAdded, this.onItemAdded);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.currentListItemDeleted, this.onItemDeleted);
   }
 
   /**
@@ -41,6 +50,7 @@ export default class CustomItem extends Component {
 
     // Unregister to events
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.itemAdded, this.onItemAdded);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.currentListItemDeleted, this.onItemDeleted);
   }
 
   /**
@@ -48,6 +58,14 @@ export default class CustomItem extends Component {
    */
   onItemAdded(event) {
     // Refresh
+    this.loadData();
+  }
+
+  /**
+   * Reacts to the deletion of an item
+   */
+  onItemDeleted(event) {
+    // Reload the data
     this.loadData();
   }
 
@@ -77,9 +95,7 @@ export default class CustomItem extends Component {
       }
 
       // Update the state with the retrieved items
-      this.setState({
-        items: items
-      });
+      this.setState({items: []}, () => {this.setState({items: items})});
 
     });
   }
@@ -109,6 +125,7 @@ export default class CustomItem extends Component {
       <TotoFlatList
             data={this.state.items}
             dataExtractor={this.createItem}
+            onItemPress={this.props.onItemPress}
             />
     )
   }

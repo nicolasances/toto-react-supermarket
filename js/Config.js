@@ -7,4 +7,5 @@ export const EVENTS = {
   itemRemoved: 'itemRemoved', // Item removed from the current supermarket list
   commonItemsRequested: 'commonItemsRequested', // Show the common items picker
   commonItemsDismissed: 'commonItemsDismissed', // Hide the common items picker
+  currentListItemDeleted: 'currentListItemDeleted', // An item has been removed from the current supermarket list 
 }

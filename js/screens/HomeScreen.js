@@ -42,6 +42,7 @@ export default class HomeScreen extends Component<Props> {
     // Bindings
     this.showCommonItems = this.showCommonItems.bind(this);
     this.hideCommonItems = this.hideCommonItems.bind(this);
+    this.onSupermarketListItemPress = this.onSupermarketListItemPress.bind(this);
   }
 
   /**
@@ -57,6 +58,15 @@ export default class HomeScreen extends Component<Props> {
     // REmove event listeners
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.commonItemsRequested, this.showCommonItems)
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.commonItemsDismissed, this.hideCommonItems)
+  }
+
+  /**
+   * When the supermarket item is pressed, go to the detail page
+   */
+  onSupermarketListItemPress(item) {
+
+    // Navigate!
+    this.props.navigation.navigate('ItemDetailScreen', {item: item.item});
   }
 
   /**
@@ -98,7 +108,7 @@ export default class HomeScreen extends Component<Props> {
 
         {dynamicCommonItemsBar}
 
-        <SupermarketList />
+        <SupermarketList onItemPress={this.onSupermarketListItemPress} style={{flex: 1}}/>
 
       </View>
     );

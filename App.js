@@ -6,6 +6,7 @@ import TRC from 'toto-react-components';
 // Navigation import
 import HomeScreen from './js/screens/HomeScreen';
 import AddFoodScreen from './js/screens/AddFoodScreen';
+import ItemDetailScreen from './js/screens/ItemDetailScreen';
 
 // Client Id
 const clientId = '209706877536-p9b1uhqemeiujcd6j92edh9f48nj43m1.apps.googleusercontent.com';
@@ -16,7 +17,8 @@ const clientId = '209706877536-p9b1uhqemeiujcd6j92edh9f48nj43m1.apps.googleuserc
 const RootStack = createStackNavigator({
 
   HomeScreen: {screen: HomeScreen},
-  AddFoodScreen: {screen: AddFoodScreen}
+  AddFoodScreen: {screen: AddFoodScreen},
+  ItemDetailScreen: {screen: ItemDetailScreen},
 
 }, {
   initialRouteName: 'HomeScreen',

@@ -126,9 +126,11 @@ export default class CommonItemsBar extends Component {
     let items = this.createItems(this.state.commonItems);
 
     return (
-      <ScrollView style={styles.container} horizontal={true}>
-        {items}
-      </ScrollView>
+      <View>
+        <ScrollView style={styles.container} horizontal={true}>
+          {items}
+        </ScrollView>
+      </View>
     )
   }
 }
@@ -136,7 +138,6 @@ export default class CommonItemsBar extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME_DARK + 50,
-    height: 60,
     paddingHorizontal: 3,
   },
   itemContainer: {
@@ -145,7 +146,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     marginBottom: 12,
     marginHorizontal: 3,
-    borderRadius: 5
+    borderRadius: 5,
+    paddingVertical: 9,
   },
   itemText: {
     color: '#fff',
