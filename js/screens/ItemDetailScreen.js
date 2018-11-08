@@ -3,6 +3,8 @@ import {Dimensions, StyleSheet, KeyboardAvoidingView, View, Text, TextInput, Ima
 import TotoIconButton from '../components/TotoIconButton';
 import TRC from 'toto-react-components';
 import SupermarketAPI from '../services/SupermarketAPI';
+import user from '../User';
+import * as config from '../Config';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -28,11 +30,13 @@ export default class ItemDetailScreen extends Component {
 
     // Get the object from the navigation
     this.state = {
-      item: props.navigation.getParam('item')
+      item: props.navigation.getParam('item'),
+      itemNote: props.navigation.getParam('item').note,
     }
 
     // Bind functions
     this.deleteItem = this.deleteItem.bind(this);
+    this.updateItem = this.updateItem.bind(this);
   }
 
   /**
@@ -53,12 +57,33 @@ export default class ItemDetailScreen extends Component {
    * Deletes the item from the supermarket list
    */
   deleteItem() {
-
     // Delete the item
     new SupermarketAPI().deleteItemFromCurrentList(this.state.item.id).then(() => {
 
       // Throw the right event
-      TRC.TotoEventBus.bus.publishEvent({name: 'currentListItemDeleted', context: {item: this.state.item}});
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.currentListItemDeleted, context: {item: this.state.item}});
+
+      // Go Back
+      this.props.navigation.goBack();
+    });
+  }
+
+  /**
+   * Updates the item of the supermarket list
+   */
+  updateItem() {
+
+    // Define the data
+    let data = {
+      note: this.state.itemNote,
+      noteBy: user.userInfo.email
+    }
+
+    // Update
+    new SupermarketAPI().updateItemOfCurrentList(this.state.item.id, data).then(() => {
+
+      // Throw the right event
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.currentListItemUpdated, context: {item: this.state.item}});
 
       // Go Back
       this.props.navigation.goBack();
@@ -87,6 +112,7 @@ export default class ItemDetailScreen extends Component {
                         placeholder='There are no notes for this item'
                         placeholderTextColor={TRC.TotoTheme.theme.COLOR_TEXT + '40'}
                         onChangeText={(text) => {this.setState({itemNote: text})}}
+                        value={this.state.itemNote}
                         multiline={true}
                         width={windowWidth - 90}
                         />
@@ -95,7 +121,9 @@ export default class ItemDetailScreen extends Component {
 
         <View style={styles.buttonsContainer}>
 
-          <TotoIconButton   image={require('../../img/tick.png')} />
+          <TotoIconButton   image={require('../../img/tick.png')}
+                            onPress={this.updateItem}
+                            />
           <TotoIconButton   image={require('../../img/trash.png')}
                             onPress={this.deleteItem}
                             />

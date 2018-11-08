@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, StyleSheet, AppState} from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import TRC from 'toto-react-components';
+import user from './js/User';
 
 // Navigation import
 import HomeScreen from './js/screens/HomeScreen';
@@ -58,7 +59,12 @@ export default class App extends Component {
         this.setState({
           isSignedIn: true,
           result // userInfo
-        })
+        }, () => {
+          result().then((r) => {
+            // Update the global user
+            user.setUserInfo(r.user);
+          });
+        });
       }
       // If the result is false then it means the user is not logged in
       else {
@@ -81,7 +87,12 @@ export default class App extends Component {
       this.setState({
         userInfo,
         isSignedIn: true
-      })
+      }, () => {
+        userInfo().then((r) => {
+          // Update the global user info
+          user.setUserInfo(r.user);
+        })
+      });
     })
   }
 

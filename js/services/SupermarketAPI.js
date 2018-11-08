@@ -39,6 +39,20 @@ export default class SupermarketAPI {
   }
 
   /**
+   * Updates an item of the current list
+   */
+  updateItemOfCurrentList(id, data) {
+
+    return new TotoAPI().fetch('/supermarket/currentList/items/' + id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+  }
+
+  /**
    * Retrieves the items of the current supermarket list
    */
   getItemsFromCurrentList() {
