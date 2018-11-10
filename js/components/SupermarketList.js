@@ -29,6 +29,7 @@ export default class SupermarketList extends Component {
     this.createItem = this.createItem.bind(this);
     this.onItemDeleted = this.onItemDeleted.bind(this);
     this.onItemAdded = this.onItemAdded.bind(this);
+    this.onItemUpdated = this.onItemUpdated.bind(this);
   }
 
   /**
@@ -41,6 +42,7 @@ export default class SupermarketList extends Component {
     // Register to events
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.itemAdded, this.onItemAdded);
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.currentListItemDeleted, this.onItemDeleted);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.currentListItemUpdated, this.onItemUpdated);
   }
 
   /**
@@ -51,6 +53,7 @@ export default class SupermarketList extends Component {
     // Unregister to events
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.itemAdded, this.onItemAdded);
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.currentListItemDeleted, this.onItemDeleted);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.currentListItemUpdated, this.onItemUpdated);
   }
 
   /**
@@ -65,6 +68,14 @@ export default class SupermarketList extends Component {
    * Reacts to the deletion of an item
    */
   onItemDeleted(event) {
+    // Reload the data
+    this.loadData();
+  }
+
+  /**
+   * Reacts to the update of an item
+   */
+  onItemUpdated(event) {
     // Reload the data
     this.loadData();
   }
