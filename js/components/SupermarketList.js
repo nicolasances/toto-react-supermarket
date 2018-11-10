@@ -88,8 +88,18 @@ export default class SupermarketList extends Component {
    * Reacts to the update of an item
    */
   onItemGrabbed(event) {
-    // Reload the data
-    this.loadData();
+    // Remove the element from the list
+    let list = this.state.items;
+
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].name == event.context.item.name) {
+        list.splice(i, 1);
+        break;
+      }
+    }
+
+    // Reset the state
+    this.setState({items: []}, () => {this.setState({items: list})});
   }
 
   /**

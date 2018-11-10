@@ -68,7 +68,7 @@ export default class ExecutionScreen extends Component<Props> {
     // If the item doesn't have notes, mark it as grabbed!
     if (item.item.note == null) {
       // Publish event
-      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.itemGrabbed, contet: {item: item.item}});
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.itemGrabbed, context: {item: item.item}});
 
       // Mark as grabbed
       new SupermarketAPI().grabItem(item.item.id);
