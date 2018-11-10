@@ -75,7 +75,7 @@ export default class ExecutionScreen extends Component<Props> {
     }
     // If the item has notes, go to the item detail screen
     else {
-      this.props.navigation.navigate('ItemDetailScreen', {item: item.item});
+      this.props.navigation.navigate('ItemDetailScreen', {item: item.item, grabbable: true});
     }
   }
 

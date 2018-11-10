@@ -34,9 +34,13 @@ export default class ItemDetailScreen extends Component {
       itemNote: props.navigation.getParam('item').note,
     }
 
+    // Set some props
+    this.grabbable = props.navigation.getParam('grabbable');
+
     // Bind functions
     this.deleteItem = this.deleteItem.bind(this);
     this.updateItem = this.updateItem.bind(this);
+    this.grabItem = this.grabItem.bind(this);
   }
 
   /**
@@ -92,9 +96,53 @@ export default class ItemDetailScreen extends Component {
   }
 
   /**
+   * Grab the item and remove it from the supermarket list
+   */
+  grabItem() {
+    // Publish event
+    TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.itemGrabbed, context: {item: this.state.item}});
+
+    // Mark as grabbed
+    new SupermarketAPI().grabItem(this.state.item.id);
+
+    // Go back
+    this.props.navigation.goBack();
+  }
+
+  /**
    * Render the component
    */
   render() {
+
+    // Define the buttons that can be shown
+    let buttons = [];
+
+    // If the item is grabbable, then it means this detail screen is opened as
+    // part of the execution of the list, then only show the "grab" button
+    if (this.grabbable) {
+      buttons.push((
+        <TotoIconButton   image={require('../../img/add-to-cart.png')}
+                          onPress={this.grabItem}
+                          key='GrabItem-detail'
+                          />
+      ))
+    }
+    // If the item is not grabbable, show the "save" and "delete" buttons
+    else {
+      buttons.push((
+        <TotoIconButton   image={require('../../img/tick.png')}
+                          onPress={this.updateItem}
+                          key='UpdateItem-detail'
+                          />
+      ));
+      buttons.push((
+        <TotoIconButton   image={require('../../img/trash.png')}
+                          onPress={this.deleteItem}
+                          key='DeleteItem-detail'
+                          />
+      ));
+    }
+
     return (
       <KeyboardAvoidingView style={styles.container} behavior='height'>
 
@@ -121,14 +169,7 @@ export default class ItemDetailScreen extends Component {
         </View>
 
         <View style={styles.buttonsContainer}>
-
-          <TotoIconButton   image={require('../../img/tick.png')}
-                            onPress={this.updateItem}
-                            />
-          <TotoIconButton   image={require('../../img/trash.png')}
-                            onPress={this.deleteItem}
-                            />
-
+          {buttons}
         </View>
 
 
