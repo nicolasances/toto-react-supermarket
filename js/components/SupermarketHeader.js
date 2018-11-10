@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import TRC from 'toto-react-components';
 import Swiper from 'react-native-swiper';
 import TotoIconButton from './TotoIconButton';
 import SupermarketAPI from '../services/SupermarketAPI';
+import * as config from '../Config';
 
 /**
  * Header of the supermarket home page
@@ -16,11 +17,18 @@ export default class SupermarketHeader extends Component {
     super(props);
 
     this.state = {
-      lastCost: null
+      lastCost: null,
+      currentListItemsCount: 0
     }
 
     // Set default properties
     this.height = this.props.height == null ? 120 : this.props.height;
+
+    this.getCurrentList = this.getCurrentList.bind(this);
+    this.onItemAdded = this.onItemAdded.bind(this);
+    this.onItemDeleted = this.onItemDeleted.bind(this);
+    this.onListClosed = this.onListClosed.bind(this);
+
   }
 
   /**
@@ -29,6 +37,47 @@ export default class SupermarketHeader extends Component {
   componentDidMount() {
     // Load the data
     this.loadData();
+    this.getCurrentList();
+
+    // Events
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.itemAdded, this.onItemAdded);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.currentListItemDeleted, this.onItemDeleted);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.listClosed, this.onListClosed);
+  }
+
+  /**
+   * When unmounting
+   */
+  componentWillUnmount() {
+
+    // Unregister to events
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.itemAdded, this.onItemAdded);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.currentListItemDeleted, this.onItemDeleted);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.listClosed, this.onListClosed);
+  }
+
+  /**
+   * React to receiving the "item added" event by refreshing the list
+   */
+  onItemAdded(event) {
+    // Refresh
+    this.getCurrentList();
+  }
+
+  /**
+   * Reacts to the deletion of an item
+   */
+  onItemDeleted(event) {
+    // Reload the data
+    this.getCurrentList();
+  }
+
+  /**
+   * React to receiving the "item added" event by refreshing the list
+   */
+  onListClosed(event) {
+    // Refresh
+    this.getCurrentList();
   }
 
   /**
@@ -49,6 +98,19 @@ export default class SupermarketHeader extends Component {
   }
 
   /**
+   * Retrieves the list of current items and defines if the button should be disabled
+   */
+  getCurrentList() {
+
+    new SupermarketAPI().getItemsFromCurrentList().then((data) => {
+
+      this.setState({
+        currentListItemsCount: data.items.length
+      });
+    })
+  }
+
+  /**
    * Renders the component
    */
   render() {
@@ -65,6 +127,20 @@ export default class SupermarketHeader extends Component {
       </TouchableOpacity>
     )
 
+    // Button
+    let button;
+
+    if (this.state.currentListItemsCount > 0) button = (
+      <TotoIconButton
+            image={require('../../img/supermarket.png')}
+            size='xl'
+            onPress={this.props.onExecuteButtonPress}
+            />
+    )
+    else button = (
+      <Image source={require('../../img/supermarket.png')} style={{opacity: 0.3, width: 38, height: 38}} />
+    )
+
     return (
       <View style={styles.container} height={this.height}>
         <Swiper showsPagination={false}>
@@ -74,11 +150,7 @@ export default class SupermarketHeader extends Component {
             {left}
 
             <View style={styles.buttonContainer}>
-              <TotoIconButton
-                    image={require('../../img/supermarket.png')}
-                    size='xl'
-                    onPress={this.props.onExecuteButtonPress}
-                    />
+              {button}
             </View>
 
             <View style={{flex: 1}}></View>

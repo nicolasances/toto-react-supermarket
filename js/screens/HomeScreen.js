@@ -37,6 +37,7 @@ export default class HomeScreen extends Component<Props> {
     this.state = {
       currentListOpacity: 1,
       showCommonItems: false,
+      currentListItemsCount: 0,
     }
 
     // Bindings

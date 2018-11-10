@@ -41,23 +41,66 @@ export default class ExecutionScreen extends Component<Props> {
     super(props);
 
     this.state = {
+      itemsCount: 0,
+      grabbedItemsCount: 0
     }
 
     // Bindings
     this.onSupermarketListItemPress = this.onSupermarketListItemPress.bind(this);
+    this.navigateToExecutionCost = this.navigateToExecutionCost.bind(this);
+    this.getCurrentList = this.getCurrentList.bind(this);
+    this.onItemGrabbed = this.onItemGrabbed.bind(this);
   }
 
   /**
    * When the component mount
    */
   componentDidMount() {
+    // Load data
+    this.getCurrentList();
+
     // Add event listeners
-    // TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.commonItemsRequested, this.showCommonItems)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.itemGrabbed, this.onItemGrabbed);
   }
 
+  /**
+   * Unmounting
+   */
   componentWillUnmount() {
-    // REmove event listeners
-    // TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.commonItemsRequested, this.showCommonItems)
+
+    // Remove event listeners
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.itemGrabbed, this.onItemGrabbed);
+  }
+
+  /**
+   * Reacts to the update of an item
+   */
+  onItemGrabbed(event) {
+    // Refresh the counts
+    this.getCurrentList();
+  }
+
+  /**
+   * Retrieve the current supermarket list
+   */
+  getCurrentList() {
+
+    new SupermarketAPI().getItemsFromCurrentList().then((data) => {
+
+      let grabbedItemsCount = 0;
+
+      // Count the number of grabbed items
+      for (var i = 0; i < data.items.length; i++) {
+
+          if (data.items[i].grabbed) grabbedItemsCount++;
+      }
+
+      // Update the state
+      this.setState({
+        itemsCount: data.items.length,
+        grabbedItemsCount: grabbedItemsCount
+      })
+    })
   }
 
   /**
@@ -68,11 +111,12 @@ export default class ExecutionScreen extends Component<Props> {
 
     // If the item doesn't have notes, mark it as grabbed!
     if (item.item.note == null) {
-      // Publish event
-      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.itemGrabbed, context: {item: item.item}});
-
       // Mark as grabbed
-      new SupermarketAPI().grabItem(item.item.id);
+      new SupermarketAPI().grabItem(item.item.id).then(() => {
+
+        // Publish event
+        TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.itemGrabbed, context: {item: item.item}});
+      });
     }
     // If the item has notes, go to the item detail screen
     else {
@@ -81,9 +125,38 @@ export default class ExecutionScreen extends Component<Props> {
   }
 
   /**
+   * Navigate to execution cost screen
+   */
+  navigateToExecutionCost() {
+    this.props.navigation.navigate('ExecutionCostScreen');
+  }
+
+  /**
    * Renders the home screen
    */
   render() {
+
+    // Buttons
+    let doneButton;
+    let cartButton;
+
+    // Show the done button only if the current list has some items (grabbed or not, it doesn't matter)
+    if (this.state.itemsCount > 0) doneButton = (
+      <TotoIconButton   image={require('../../img/tick.png')}
+                        size='m'
+                        onPress={() => {this.props.navigation.navigate('ExecutionCostScreen')}}
+                        label='Done!'
+                        />
+    )
+
+    // Show the cart button only if the current list has some items (grabbed)
+    if (this.state.grabbedItemsCount > 0) cartButton = (
+      <TotoIconButton   image={require('../../img/add-to-cart.png')}
+                        size='m'
+                        label='Items in cart'
+                        onPress={() => {this.props.navigation.navigate('GrabbedItemsScreen')}}
+                        />
+    )
 
     return (
       <View style={styles.container}>
@@ -91,17 +164,8 @@ export default class ExecutionScreen extends Component<Props> {
         <StatusBar backgroundColor={TRC.TotoTheme.theme.COLOR_THEME_DARK} barStyle="light-content" />
 
         <View style={styles.buttonContainer}>
-
-          <TotoIconButton   image={require('../../img/tick.png')}
-                            size='m'
-                            onPress={() => {this.props.navigation.navigate('ExecutionCostScreen')}}
-                            label='Done!'
-                            />
-
-          <TotoIconButton   image={require('../../img/add-to-cart.png')}
-                            size='m'
-                            label='Items in cart'
-                            />
+          {doneButton}
+          {cartButton}
         </View>
 
         <SupermarketList  onItemPress={this.onSupermarketListItemPress}
@@ -109,6 +173,7 @@ export default class ExecutionScreen extends Component<Props> {
                           titleOnEmpty="You're done!"
                           messageOnEmpty="Press the 'done!' button to close the supermarket list and put the price!"
                           imageOnEmpty={require('../../img/tick.png')}
+                          onImageOnEmptyPress={this.navigateToExecutionCost}
                           />
 
       </View>

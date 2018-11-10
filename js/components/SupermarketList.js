@@ -12,7 +12,13 @@ const infoSign = require('../../img/info.png');
  * Shows the current supermarket list
  * Props:
  *
- * - onItemPress      : (optional) function to be called when an item is pressed
+ * - onItemPress          : (optional) function to be called when an item is pressed
+ * - titleOnEmpty         : (optional) the title to show when the list is empty
+ * - messageOnEmpty       : (optional) the message to show when the list is empty
+ * - imageOnEmpty         : (optional) the image to show when the list is empty
+ * - grabbed              : (optional, default = false) true to show the items that
+ *                          have been grabbed and put in the cart
+ * - onImageOnEmptyPress  : (optional) callback to call when the image on empty is pressed
  */
 export default class SupermarketList extends Component {
 
@@ -23,6 +29,9 @@ export default class SupermarketList extends Component {
     this.state = {
       items: [],
     }
+
+    // Default values
+    this.grabbed = this.props.grabbed != null ? this.props.grabbed : false;
 
     // Bind this
     this.loadData = this.loadData.bind(this);
@@ -108,7 +117,7 @@ export default class SupermarketList extends Component {
   loadData() {
 
     // Call the API to retrieve the items of the current supermarket list
-    new SupermarketAPI().getItemsFromCurrentList().then((data) => {
+    new SupermarketAPI().getItemsFromCurrentList(this.grabbed).then((data) => {
 
       if (data == null || data.items == null) return;
 
@@ -162,7 +171,7 @@ export default class SupermarketList extends Component {
 
     if ((this.state.items == null || this.state.items.length == 0) && this.props.titleOnEmpty != null) emptyMessage = (
       <View style={styles.emptyMessageContainer}>
-        <TouchableOpacity style={styles.emptyMessageImageContainer}>
+        <TouchableOpacity style={styles.emptyMessageImageContainer} onPress={this.props.onImageOnEmptyPress}>
           <Image style={styles.emptyMessageImage} source={this.props.imageOnEmpty} />
         </TouchableOpacity>
         <Text style={styles.emptyMessageTitle}>{this.props.titleOnEmpty}</Text>

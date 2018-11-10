@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Dimensions, StyleSheet, KeyboardAvoidingView, View, Text, TextInput, Image} from 'react-native';
+import {Dimensions, StyleSheet, KeyboardAvoidingView, View, Text, TextInput, Image, StatusBar} from 'react-native';
 import TotoIconButton from '../components/TotoIconButton';
 import TRC from 'toto-react-components';
 import SupermarketAPI from '../services/SupermarketAPI';
@@ -75,6 +75,8 @@ export default class ExecutionCostScreen extends Component {
 
     return (
       <KeyboardAvoidingView style={styles.container} behavior='height'>
+
+        <StatusBar backgroundColor={TRC.TotoTheme.theme.COLOR_THEME} barStyle="default" />
 
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Cost</Text>

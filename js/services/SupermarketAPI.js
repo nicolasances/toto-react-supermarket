@@ -83,9 +83,11 @@ export default class SupermarketAPI {
   /**
    * Retrieves the items of the current supermarket list
    */
-  getItemsFromCurrentList() {
+  getItemsFromCurrentList(grabbed) {
 
-    return new TotoAPI().fetch('/supermarket/currentList/items?grabbed=false').then((response) => response.json());
+    let filter = (grabbed != null) ? ('?grabbed=' + grabbed) : '';
+
+    return new TotoAPI().fetch('/supermarket/currentList/items' + filter).then((response) => response.json());
   }
 
   /**

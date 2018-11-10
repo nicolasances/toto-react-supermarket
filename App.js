@@ -10,6 +10,7 @@ import AddFoodScreen from './js/screens/AddFoodScreen';
 import ItemDetailScreen from './js/screens/ItemDetailScreen';
 import ExecutionScreen from './js/screens/ExecutionScreen';
 import ExecutionCostScreen from './js/screens/ExecutionCostScreen';
+import GrabbedItemsScreen from './js/screens/GrabbedItemsScreen';
 
 // Client Id
 const clientId = '209706877536-p9b1uhqemeiujcd6j92edh9f48nj43m1.apps.googleusercontent.com';
@@ -24,6 +25,7 @@ const RootStack = createStackNavigator({
   ItemDetailScreen: {screen: ItemDetailScreen},
   ExecutionScreen: {screen: ExecutionScreen},
   ExecutionCostScreen: {screen: ExecutionCostScreen},
+  GrabbedItemsScreen: {screen: GrabbedItemsScreen},
 
 }, {
   initialRouteName: 'HomeScreen',
