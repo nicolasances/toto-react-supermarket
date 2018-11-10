@@ -76,7 +76,8 @@ export default class ItemDetailScreen extends Component {
     // Define the data
     let data = {
       note: this.state.itemNote,
-      noteBy: user.userInfo.email
+      noteBy: user.userInfo.email,
+      noteByGivenName: user.userInfo.givenName
     }
 
     // Update
