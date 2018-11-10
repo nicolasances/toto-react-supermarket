@@ -77,6 +77,7 @@ export default class SupermarketHeader extends Component {
    */
   onListClosed(event) {
     // Refresh
+    this.loadData();
     this.getCurrentList();
   }
 
