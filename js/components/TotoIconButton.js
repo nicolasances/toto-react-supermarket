@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, Image, StyleSheet, Text} from 'react-native';
 import TRC from 'toto-react-components';
 
 /*+
@@ -9,6 +9,7 @@ import TRC from 'toto-react-components';
  * - secondary      : true if the button should be a secondary button
  * - image          : the image to use
  * - size           : (optional, default: 'm') can be 'l', 'xl', 'm'
+ * - label          : (optional, default: none) shows a label
  */
 export default class TotoIconButton extends Component {
 
@@ -41,11 +42,21 @@ export default class TotoIconButton extends Component {
     let containerSizeStyle = {width: containerSize, height: containerSize, borderRadius: containerSize / 2};
     let iconSizeStyle = {width: iconSize, height: iconSize};
 
+    // Define the label component if any
+    let label;
+
+    if (this.props.label) label = (
+      <Text style={styles.label}>{this.props.label}</Text>
+    )
+
     return (
 
-      <TouchableOpacity style={[styles.container, containerSizeStyle]} onPress={this.props.onPress}>
-        <Image style={[styles.image, iconSizeStyle]} source={this.props.image} />
-      </TouchableOpacity>
+      <View style={{alignItems: 'center', marginHorizontal: 6}}>
+        <TouchableOpacity style={[styles.container, containerSizeStyle]} onPress={this.props.onPress}>
+          <Image style={[styles.image, iconSizeStyle]} source={this.props.image} />
+        </TouchableOpacity>
+        {label}
+      </View>
     )
   }
 }
@@ -54,11 +65,19 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+    alignContent: 'center',
     borderWidth: 2,
     borderColor: TRC.TotoTheme.theme.COLOR_ACCENT,
-    marginHorizontal: 6,
   },
   image: {
     tintColor: TRC.TotoTheme.theme.COLOR_ACCENT,
+    alignItems: 'center',
+  },
+  label: {
+    color: TRC.TotoTheme.theme.COLOR_ACCENT,
+    fontSize: 10,
+    textAlign: 'center',
+    marginTop: 6,
+    textTransform: 'uppercase'
   },
 });

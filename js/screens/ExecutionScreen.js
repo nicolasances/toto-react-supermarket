@@ -95,10 +95,12 @@ export default class ExecutionScreen extends Component<Props> {
           <TotoIconButton   image={require('../../img/tick.png')}
                             size='m'
                             onPress={() => {this.props.navigation.navigate('ExecutionCostScreen')}}
+                            label='Done!'
                             />
 
-          <TotoIconButton   image={require('../../img/trash.png')}
+          <TotoIconButton   image={require('../../img/add-to-cart.png')}
                             size='m'
+                            label='Items in cart'
                             />
         </View>
 
