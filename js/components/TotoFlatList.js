@@ -8,12 +8,14 @@ import TRC from 'toto-react-components';
  * To use this you must provide:
  *  - data                  : the dataset as an [] of objects
  *  - dataExtractor()       : a function that takes the flat list item and extract the following data structure:
- *                            { title : the title, main text, of this item,
- *                             avatar : an object describing the avatar:
+ *                            { title :   the title, main text, of this item,
+ *                              avatar :  an object describing the avatar:
  *                                      { type: 'number, image'
  *                                        value: (optional) 'a value, in case of type number, an image in case of type image'
  *                                        unit: (optional) 'the unit, in case of type number'
  *                                       }
+ *                              sign :    an image to put as a "sign" (e.g. info sign to show that this item has info attached)
+ *                                        should be a loaded image, (provided as require(..), so already loaded)
  *                            }
  *  - onItemPress()         : a function to be called when the item is pressed
  */
@@ -101,6 +103,15 @@ class Item extends Component {
       avatar = <Text></Text>
     }
 
+    // If there is a sign
+    let sign;
+
+    if (data.sign) sign = (
+      <View style={styles.signContainer}>
+        <Image source={data.sign} style={styles.sign} />
+      </View>
+    )
+
     return (
       <TouchableOpacity style={styles.item} onPress={() => {if (this.props.onItemPress) this.props.onItemPress(this.props.item)}}>
 
@@ -111,6 +122,8 @@ class Item extends Component {
         <View style={styles.textContainer}>
           <Text style={{color: TRC.TotoTheme.theme.COLOR_TEXT}}>{data.title}</Text>
         </View>
+
+        {sign}
 
         <View style={styles.leftSideValueContainer}>
           <Text style={styles.leftSideValue}>{data.leftSideValue}</Text>
@@ -161,4 +174,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: TRC.TotoTheme.theme.COLOR_TEXT
   },
+  signContainer: {
+    marginLeft: 12,
+    justifyContent: 'center'
+  },
+  sign: {
+    width: 18,
+    height: 18,
+    tintColor: TRC.TotoTheme.theme.COLOR_ACCENT_LIGHT
+  }
 })

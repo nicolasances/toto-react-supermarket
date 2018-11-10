@@ -6,6 +6,7 @@ import TotoFlatList from './TotoFlatList';
 import * as config from '../Config';
 
 const defaultImage = require('../../img/groceries/groceries-bag.png');
+const infoSign = require('../../img/info.png');
 
 /**
  * Shows the current supermarket list
@@ -117,13 +118,15 @@ export default class SupermarketList extends Component {
   createItem(item) {
 
     let image = item.item.image != null ? item.item.image : defaultImage;
+    let sign = item.item.note != null ? infoSign : null;
 
     return {
       title: item.item.name,
       avatar: {
         type: 'image',
         value: image
-      }
+      },
+      sign: sign
     }
 
   }
