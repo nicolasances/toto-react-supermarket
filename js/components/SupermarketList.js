@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import TRC from 'toto-react-components';
 import SupermarketAPI from '../services/SupermarketAPI';
 import TotoFlatList from './TotoFlatList';
@@ -156,12 +156,31 @@ export default class SupermarketList extends Component {
    * Renders the data
    */
   render() {
+
+    // Show the empty message if the list is empty and if one has been set
+    let emptyMessage;
+
+    if ((this.state.items == null || this.state.items.length == 0) && this.props.titleOnEmpty != null) emptyMessage = (
+      <View style={styles.emptyMessageContainer}>
+        <TouchableOpacity style={styles.emptyMessageImageContainer}>
+          <Image style={styles.emptyMessageImage} source={this.props.imageOnEmpty} />
+        </TouchableOpacity>
+        <Text style={styles.emptyMessageTitle}>{this.props.titleOnEmpty}</Text>
+        <Text style={styles.emptyMessage}>{this.props.messageOnEmpty}</Text>
+      </View>
+    )
+
     return (
-      <TotoFlatList
-            data={this.state.items}
-            dataExtractor={this.createItem}
-            onItemPress={this.props.onItemPress}
-            />
+
+      <View>
+        {emptyMessage}
+
+        <TotoFlatList
+              data={this.state.items}
+              dataExtractor={this.createItem}
+              onItemPress={this.props.onItemPress}
+              />
+      </View>
     )
   }
 
@@ -172,5 +191,36 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: 'row'
+  },
+  emptyMessageContainer: {
+    marginVertical: 32,
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  emptyMessageImageContainer: {
+    borderColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  emptyMessageImage: {
+    width: 48,
+    height: 48,
+    tintColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
+  },
+  emptyMessageTitle: {
+    fontSize: 22,
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    marginBottom: 12,
+  },
+  emptyMessage: {
+    fontSize: 14,
+    color: TRC.TotoTheme.theme.COLOR_TEXT,
+    opacity: 0.8,
+    textAlign: 'center'
   },
 })

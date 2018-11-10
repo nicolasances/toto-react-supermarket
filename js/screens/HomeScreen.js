@@ -117,7 +117,12 @@ export default class HomeScreen extends Component<Props> {
 
         {dynamicCommonItemsBar}
 
-        <SupermarketList onItemPress={this.onSupermarketListItemPress} style={{flex: 1}}/>
+        <SupermarketList  onItemPress={this.onSupermarketListItemPress}
+                          style={{flex: 1}}
+                          titleOnEmpty="The list is empty!"
+                          messageOnEmpty="Start adding groceries to the list by writing on the top part of the screen or by selecting one of the commonly used groceries.."
+                          imageOnEmpty={require('../../img/carrot.png')}
+                          />
 
       </View>
     );

@@ -104,7 +104,12 @@ export default class ExecutionScreen extends Component<Props> {
                             />
         </View>
 
-        <SupermarketList onItemPress={this.onSupermarketListItemPress} style={{flex: 1}}/>
+        <SupermarketList  onItemPress={this.onSupermarketListItemPress}
+                          style={{flex: 1}}
+                          titleOnEmpty="You're done!"
+                          messageOnEmpty="Press the 'done!' button to close the supermarket list and put the price!"
+                          imageOnEmpty={require('../../img/tick.png')}
+                          />
 
       </View>
     );
