@@ -23,6 +23,7 @@ export default class HomeScreen extends Component<Props> {
         headerTitle: <TRC.TotoTitleBar
                         title='Supermarket List'
                         color={TRC.TotoTheme.theme.COLOR_THEME_DARK}
+                        titleColor={TRC.TotoTheme.theme.COLOR_TEXT_LIGHT}
                         />
       }
     }

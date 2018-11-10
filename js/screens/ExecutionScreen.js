@@ -29,6 +29,7 @@ export default class ExecutionScreen extends Component<Props> {
                         title="Let's shop!"
                         color={TRC.TotoTheme.theme.COLOR_THEME_DARK}
                         back={true}
+                        titleColor={TRC.TotoTheme.theme.COLOR_TEXT_LIGHT}
                         />
       }
     }
@@ -93,6 +94,7 @@ export default class ExecutionScreen extends Component<Props> {
 
           <TotoIconButton   image={require('../../img/tick.png')}
                             size='m'
+                            onPress={() => {this.props.navigation.navigate('ExecutionCostScreen')}}
                             />
 
           <TotoIconButton   image={require('../../img/trash.png')}

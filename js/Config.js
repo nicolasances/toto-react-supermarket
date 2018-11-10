@@ -10,4 +10,5 @@ export const EVENTS = {
   currentListItemDeleted: 'currentListItemDeleted', // An item has been removed from the current supermarket list
   currentListItemUpdated: 'currentListItemUpdated', // An item has been updated in the current supermarket list
   itemGrabbed: 'itemGrabbed', // An item has been grabbed at the supermarket
+  listClosed: 'listClosed', // The current list has been closed
 }

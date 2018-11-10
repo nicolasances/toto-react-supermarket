@@ -67,6 +67,20 @@ export default class SupermarketAPI {
   }
 
   /**
+   * Closes the list after execution
+   */
+  closeList(cost) {
+
+    return new TotoAPI().fetch('/supermarket/currentList', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({cost: cost})
+    });
+  }
+
+  /**
    * Retrieves the items of the current supermarket list
    */
   getItemsFromCurrentList() {
@@ -80,6 +94,14 @@ export default class SupermarketAPI {
   getCommonItems() {
 
     return new TotoAPI().fetch('/supermarket/commonItems').then((response) => response.json());
+  }
+
+  /**
+   * Retrieves the last executed list
+   */
+  getLastList() {
+
+    return new TotoAPI().fetch('/supermarket/pastLists?maxResults=1').then((response) => response.json());
   }
 
 }
