@@ -4,6 +4,11 @@ import TRC from 'toto-react-components';
 import Swiper from 'react-native-swiper';
 import TotoIconButton from './TotoIconButton';
 
+/**
+ * Header of the supermarket home page
+ * Properties:
+ * - onExecuteButtonPress     : callback function to be called when the button to start executing the list is pressed
+ */
 export default class SupermarketHeader extends Component {
 
   constructor(props) {
@@ -23,6 +28,7 @@ export default class SupermarketHeader extends Component {
             <TotoIconButton
                   image={require('../../img/supermarket.png')}
                   size='xl'
+                  onPress={this.props.onExecuteButtonPress}
                   />
 
           </View>

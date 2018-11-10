@@ -53,11 +53,25 @@ export default class SupermarketAPI {
   }
 
   /**
+   * Sets an item of the supermarket list as "grabbed!"
+   */
+  grabItem(id) {
+
+    return new TotoAPI().fetch('/supermarket/currentList/items/' + id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({grabbed: true})
+    });
+  }
+
+  /**
    * Retrieves the items of the current supermarket list
    */
   getItemsFromCurrentList() {
 
-    return new TotoAPI().fetch('/supermarket/currentList/items').then((response) => response.json());
+    return new TotoAPI().fetch('/supermarket/currentList/items?grabbed=false').then((response) => response.json());
   }
 
   /**

@@ -14,7 +14,6 @@ const windowWidth = Dimensions.get('window').width;
 
 const largeDevice = windowWidth > 600 ? true : false;
 
-
 export default class HomeScreen extends Component<Props> {
 
     // Define the Navigation options
@@ -43,6 +42,7 @@ export default class HomeScreen extends Component<Props> {
     this.showCommonItems = this.showCommonItems.bind(this);
     this.hideCommonItems = this.hideCommonItems.bind(this);
     this.onSupermarketListItemPress = this.onSupermarketListItemPress.bind(this);
+    this.onExecuteButtonPress = this.onExecuteButtonPress.bind(this);
   }
 
   /**
@@ -67,6 +67,14 @@ export default class HomeScreen extends Component<Props> {
 
     // Navigate!
     this.props.navigation.navigate('ItemDetailScreen', {item: item.item});
+  }
+
+  /**
+   * When the execute button is pressed
+   */
+  onExecuteButtonPress(item) {
+    // Navigate
+    this.props.navigation.navigate('ExecutionScreen');
   }
 
   /**
@@ -102,7 +110,7 @@ export default class HomeScreen extends Component<Props> {
 
         <StatusBar backgroundColor={TRC.TotoTheme.theme.COLOR_THEME_DARK} barStyle="light-content" />
 
-        <SupermarketHeader />
+        <SupermarketHeader onExecuteButtonPress={this.onExecuteButtonPress} />
 
         <CustomItem />
 
