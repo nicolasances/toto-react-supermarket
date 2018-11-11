@@ -145,7 +145,7 @@ export default class ExecutionScreen extends Component<Props> {
       <TotoIconButton   image={require('../../img/tick.png')}
                         size='m'
                         onPress={() => {this.props.navigation.navigate('ExecutionCostScreen')}}
-                        label='Done!'
+                        label='DONE!'
                         />
     )
 
@@ -153,7 +153,7 @@ export default class ExecutionScreen extends Component<Props> {
     if (this.state.grabbedItemsCount > 0) cartButton = (
       <TotoIconButton   image={require('../../img/add-to-cart.png')}
                         size='m'
-                        label='Items in cart'
+                        label='ITEMS IN CART'
                         onPress={() => {this.props.navigation.navigate('GrabbedItemsScreen')}}
                         />
     )
@@ -194,5 +194,6 @@ const styles = StyleSheet.create({
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
     paddingVertical: 24,
     marginBottom: 12,
+    height: 116,
   }
 });

@@ -167,6 +167,7 @@ export default class SupermarketHeader extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
+    height: 116,
   },
   overviewContainer: {
     flex: 1,
