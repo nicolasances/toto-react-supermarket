@@ -89,17 +89,15 @@ export default class App extends Component {
   onLogin() {
 
     this.totoSignIn.signIn().then((userInfo) => {
-      // Update the state with the user info
+
+      // Set the user
+      user.setUserInfo(userInfo);
+
+      // Update the state
       this.setState({
-        userInfo,
         isSignedIn: true
-      }, () => {
-        userInfo().then((r) => {
-          // Update the global user info
-          user.setUserInfo(r.user);
-        })
-      });
-    })
+      })
+    });
   }
 
   render() {
