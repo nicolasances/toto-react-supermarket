@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Dimensions, StyleSheet, KeyboardAvoidingView, View, Text, TextInput, Image} from 'react-native';
+import {Dimensions, StyleSheet, KeyboardAvoidingView, View, Text, TextInput, Image, Platform} from 'react-native';
 import TotoIconButton from '../components/TotoIconButton';
 import TRC from 'toto-react-components';
 import SupermarketAPI from '../services/SupermarketAPI';
@@ -7,6 +7,8 @@ import user from '../User';
 import * as config from '../Config';
 
 const windowWidth = Dimensions.get('window').width;
+
+const android = Platform.OS == 'android';
 
 export default class ItemDetailScreen extends Component {
 
@@ -144,7 +146,7 @@ export default class ItemDetailScreen extends Component {
     }
 
     return (
-      <KeyboardAvoidingView style={styles.container} behavior='height'>
+      <KeyboardAvoidingView style={styles.container} behavior={android ? null : 'height'}>
 
         <View style={styles.noteContainer}>
 
