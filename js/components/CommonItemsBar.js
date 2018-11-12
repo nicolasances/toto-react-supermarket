@@ -127,7 +127,7 @@ export default class CommonItemsBar extends Component {
 
     return (
       <View>
-        <ScrollView style={styles.container} horizontal={true}>
+        <ScrollView style={styles.container} horizontal={true} showsHorizontalScrollIndicator={false}>
           {items}
         </ScrollView>
       </View>

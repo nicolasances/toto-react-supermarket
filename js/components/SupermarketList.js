@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {ScrollView, View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import TRC from 'toto-react-components';
 import SupermarketAPI from '../services/SupermarketAPI';
 import TotoFlatList from './TotoFlatList';
@@ -181,7 +181,7 @@ export default class SupermarketList extends Component {
 
     return (
 
-      <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {emptyMessage}
 
         <TotoFlatList
@@ -189,7 +189,7 @@ export default class SupermarketList extends Component {
               dataExtractor={this.createItem}
               onItemPress={this.props.onItemPress}
               />
-      </View>
+      </ScrollView>
     )
   }
 
