@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ScrollView, View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {ScrollView, View, Text, StyleSheet, Image, TouchableOpacity, AppState} from 'react-native';
 import TRC from 'toto-react-components';
 import SupermarketAPI from '../services/SupermarketAPI';
 import TotoFlatList from './TotoFlatList';
@@ -25,6 +25,9 @@ export default class SupermarketList extends Component {
   constructor(props) {
     super(props);
 
+    // App state init
+    this.appState = AppState.currentState;
+
     // State init
     this.state = {
       items: [],
@@ -41,6 +44,9 @@ export default class SupermarketList extends Component {
     this.onItemAdded = this.onItemAdded.bind(this);
     this.onItemUpdated = this.onItemUpdated.bind(this);
     this.onItemGrabbed = this.onItemGrabbed.bind(this);
+    this.handleAppStateChange = this.handleAppStateChange.bind(this);
+    this.hasChanged = this.hasChanged.bind(this);
+    this.refreshList = this.refreshList.bind(this);
   }
 
   /**
@@ -55,6 +61,12 @@ export default class SupermarketList extends Component {
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.currentListItemDeleted, this.onItemDeleted);
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.currentListItemUpdated, this.onItemUpdated);
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.itemGrabbed, this.onItemGrabbed);
+
+    // Register to App State changes
+    AppState.addEventListener('change', this.handleAppStateChange);
+
+    // Start a timer to refresh the data
+    this.timer = setInterval(this.loadData, 3000);
   }
 
   /**
@@ -67,6 +79,79 @@ export default class SupermarketList extends Component {
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.currentListItemDeleted, this.onItemDeleted);
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.currentListItemUpdated, this.onItemUpdated);
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.itemGrabbed, this.onItemGrabbed);
+
+    // Un-Register to App State changes
+    AppState.removeEventListener('change', this.handleAppStateChange);
+
+    // Clear the timer that refreshes the data
+    clearInterval(this.timer);
+  }
+
+  /**
+   * Handles changes in the App state.
+   * If the app is brought from background to active, check if the list has changed and in case refresh the list.
+   */
+  handleAppStateChange(nextAppState) {
+
+    // If the new state is 'active', reload the supermarket list
+    if (this.appState.match(/inactive|background/) && nextAppState == 'active') {
+
+      // Reload the list
+      this.loadData();
+    }
+
+    // Set the new State
+    this.appState = nextAppState;
+  }
+
+  /**
+   * Checks if the supermarket list has changed.
+   * Compares the this.state.items list with the provided list.
+   */
+  hasChanged(items) {
+
+    if (items == null) return true;
+    if (this.state == null || this.state.items == null) return true;
+
+    // If the length of the list has changed, then the list has definitely changed!
+    if (items.length != this.state.items.length) return true;
+
+    // Compare each item
+    for (var i = 0; i < items.length; i++) {
+
+      if (items[i].name != this.state.items[i].name ||
+          items[i].note != this.state.items[i].note ||
+          items[i].grabbed != this.state.items[i].grabbed)
+          return true;
+
+    }
+
+    return false;
+  }
+
+  /**
+   * Refreshes the supermarket list with the provided items
+   */
+  refreshList(items) {
+
+    if (items == null) return;
+
+    // For every item assign the image
+    for (var i = 0; i < items.length; i++) {
+
+      // Get the category of the item, if any
+      let categoryId = items[i].category;
+
+      // If there's a category id, retrieve the image of that category
+      let category = categoryId != null ? new DietAPI().getGroceryCategory(categoryId) : null;
+
+      // Assign the image to the item
+      items[i].image = category == null ? defaultImage : category.image;
+    }
+
+    // Update the state with the retrieved items
+    this.setState({items: []}, () => {this.setState({items: items})});
+
   }
 
   /**
@@ -112,32 +197,20 @@ export default class SupermarketList extends Component {
   }
 
   /**
-   * Loads the data from the API
+   * Loads the data from the API.
+   * Checks if the data has changed with the current version present in this.state.items
    */
   loadData() {
 
     // Call the API to retrieve the items of the current supermarket list
     new SupermarketAPI().getItemsFromCurrentList(this.grabbed).then((data) => {
 
-      if (data == null || data.items == null) return;
+      // Check if the list has changed
+      if (this.hasChanged(data.items)) {
 
-      let items = data.items;
-
-      // For every item assign the image
-      for (var i = 0; i < items.length; i++) {
-
-        // Get the category of the item, if any
-        let categoryId = items[i].category;
-
-        // If there's a category id, retrieve the image of that category
-        let category = categoryId != null ? new DietAPI().getGroceryCategory(categoryId) : null;
-
-        // Assign the image to the item
-        items[i].image = category == null ? defaultImage : category.image;
+        // Refresh the list
+        this.refreshList(data.items);
       }
-
-      // Update the state with the retrieved items
-      this.setState({items: []}, () => {this.setState({items: items})});
 
     });
   }
