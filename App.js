@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Platform, View, StyleSheet, AppState} from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import TRC from 'toto-react-components';
-import TotoSignIn from './TotoSignIn';
 import user from './js/User';
 
 // Navigation import
@@ -48,7 +47,7 @@ export default class App extends Component {
     super(props);
 
     // Instantiate the sign in utility
-    this.totoSignIn = new TotoSignIn(clientId);
+    this.totoSignIn = new TRC.TotoSignIn(clientId);
 
     // Init so that the signed in check is set as 'in progress'
     this.state = {
@@ -92,7 +91,7 @@ export default class App extends Component {
 
     this.totoSignIn.signIn().then((userInfo) => {
 
-      console.log(userInfo);
+      // console.log(userInfo);
 
       // Set the user
       user.setUserInfo(userInfo);
