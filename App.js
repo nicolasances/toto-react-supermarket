@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, AppState} from 'react-native';
+import {Platform, View, StyleSheet, AppState} from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import TRC from 'toto-react-components';
+import TotoSignIn from './TotoSignIn';
 import user from './js/User';
 
 // Navigation import
@@ -13,7 +14,8 @@ import ExecutionCostScreen from './js/screens/ExecutionCostScreen';
 import GrabbedItemsScreen from './js/screens/GrabbedItemsScreen';
 
 // Client Id
-const clientId = '209706877536-p9b1uhqemeiujcd6j92edh9f48nj43m1.apps.googleusercontent.com';
+// const clientId = '209706877536-p9b1uhqemeiujcd6j92edh9f48nj43m1.apps.googleusercontent.com';
+const clientId = Platform.OS == 'android' ? '209706877536-2hkg1qkvpsokqls7p78lbjahvqfknhh4.apps.googleusercontent.com' : '209706877536-p9b1uhqemeiujcd6j92edh9f48nj43m1.apps.googleusercontent.com';
 
 /**
  * Navigation Stack
@@ -46,7 +48,7 @@ export default class App extends Component {
     super(props);
 
     // Instantiate the sign in utility
-    this.totoSignIn = new TRC.TotoSignIn(clientId);
+    this.totoSignIn = new TotoSignIn(clientId);
 
     // Init so that the signed in check is set as 'in progress'
     this.state = {

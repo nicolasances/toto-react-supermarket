@@ -13,13 +13,13 @@
           "package_name": "com.totoreactsupermarket"
         }
       },
-      "oauth_client": [
+            "oauth_client": [
         {
           "client_id": "209706877536-5s13ia2d7ngnajl8kk1s6fd6kc4aaekq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.totoreactsupermarket",
-            "certificate_hash": "b01840ddd2af0c49839ef84bece263a4f55842d8"
+            "certificate_hash": "B01840DDD2AF0C49839EF84BECE263A4F55842D8"
           }
         },
         {
