@@ -98,7 +98,7 @@ export default class App extends Component {
 
       // Update the state
       this.setState({
-        isSignedIn: true
+        isSignedIn: userInfo != null
       })
     });
   }
