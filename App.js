@@ -90,6 +90,8 @@ export default class App extends Component {
 
     this.totoSignIn.signIn().then((userInfo) => {
 
+      console.log(userInfo);
+
       // Set the user
       user.setUserInfo(userInfo);
 

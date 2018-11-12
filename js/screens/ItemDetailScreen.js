@@ -43,6 +43,7 @@ export default class ItemDetailScreen extends Component {
     this.deleteItem = this.deleteItem.bind(this);
     this.updateItem = this.updateItem.bind(this);
     this.grabItem = this.grabItem.bind(this);
+
   }
 
   /**
