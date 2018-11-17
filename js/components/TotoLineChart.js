@@ -28,6 +28,9 @@ const window = Dimensions.get('window');
  * - curveCardinal          : (optional, default true), shows the curve as a curve cardinal. If set to false it will use the basic curve (curveLinear)
  * - leaveMargins           : (optional, default true), leave a 24 margin horizontally on each side of tthe graph
  * - areaColor              : (optional, default no color), colors the area underlying the graph with the specified color
+ * - yLines                 : (optional) the y values for which to draw a horizontal line (to show the scale)
+ *                            if passed, it's an [y1, y2, y3, ...]
+ *                            each value will correspond to a horizontal line
  */
 export default class TotoLineChart extends Component {
 
@@ -40,6 +43,7 @@ export default class TotoLineChart extends Component {
     // Init the state!
     this.state = {
       data: null,
+      yLines: [],
       // Graph settings
       settings: {
         lineColor: TRC.TotoTheme.theme.COLOR_THEME_LIGHT,
@@ -98,7 +102,57 @@ export default class TotoLineChart extends Component {
     this.y = d3.scale.scaleLinear().range([0, this.height - this.valuePointsSize - 12]).domain([0, yMax]);
 
     // Update the state with the new data
-    this.setState({data: []}, () => {this.setState({data: props.data})});
+    this.setState({data: [], yLines: []}, () => {this.setState({data: props.data, yLines: props.yLines})});
+
+  }
+  /**
+   * Creates the horizontal y scale lines as requested in the property yLines
+   */
+  createYLines(ylines) {
+
+    if (ylines == null) return;
+
+    let shapes = [];
+
+    for (var i = 0; i < ylines.length; i++) {
+
+      let line = d3.shape.line()
+          .x((d) => {return d.x})
+          .y((d) => {return d.y});
+
+      let path = line([{x: 0, y: this.height - this.y(ylines[i])}, {x: window.width, y: this.height - this.y(ylines[i])}]);
+
+      shapes.push(this.createShape(path, TRC.TotoTheme.theme.COLOR_THEME_LIGHT + 50, null, 1));
+    }
+
+    return shapes;
+
+  }
+
+  /**
+   * Creates the labels to put on the ylines, if any
+   */
+  createYLinesLabels(ylines) {
+
+    if (ylines == null) return;
+
+    let shapes = [];
+
+    for (var i = 0; i < ylines.length; i++) {
+
+      let key = 'Label-YLine-' + Math.random();
+
+      // Create the text element
+      let element = (
+        <View key={key} style={{position: 'absolute', left: 6, top: this.height + 3 - this.y(ylines[i])}}>
+          <Text style={styles.yAxisLabel}>{ylines[i]}</Text>
+        </View>
+      );
+
+      shapes.push(element);
+    }
+
+    return shapes;
 
   }
 
@@ -305,14 +359,18 @@ export default class TotoLineChart extends Component {
     let circles = this.showValuePoints ? this.createCircles(this.state.data) : null;
     let labels = this.createValueLabels(this.state.data);
     let xLabels = this.createXAxisLabels(this.state.data);
+    let ylines = this.createYLines(this.state.yLines);
+    let ylinesLabels = this.createYLinesLabels(this.state.yLines);
 
     return (
       <View style={styles.container}>
         <Surface height={this.props.height} width={window.width}>
+          {ylines}
           {line}
           {circles}
         </Surface>
         {labels}
+        {ylinesLabels}
         {xLabels}
       </View>
     )
@@ -332,6 +390,10 @@ const styles = StyleSheet.create({
   },
   xAxisLabel: {
     color: TRC.TotoTheme.theme.COLOR_TEXT + '50',
+    fontSize: 10,
+  },
+  yAxisLabel: {
+    color: TRC.TotoTheme.theme.COLOR_THEME_LIGHT,
     fontSize: 10,
   },
 });

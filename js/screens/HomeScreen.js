@@ -19,11 +19,19 @@ export default class HomeScreen extends Component<Props> {
     // Define the Navigation options
     static navigationOptions = ({navigation}) => {
 
+      let startShoppingButton = {
+        image: require('../../img/supermarket.png'),
+        navData: {
+          screen: 'ExecutionScreen'
+        }
+      }
+
       return {
         headerTitle: <TRC.TotoTitleBar
                         title='Supermarket List'
                         color={TRC.TotoTheme.theme.COLOR_THEME_DARK}
                         titleColor={TRC.TotoTheme.theme.COLOR_TEXT_LIGHT}
+                        rightButton={startShoppingButton}
                         />
       }
     }
@@ -44,7 +52,6 @@ export default class HomeScreen extends Component<Props> {
     this.showCommonItems = this.showCommonItems.bind(this);
     this.hideCommonItems = this.hideCommonItems.bind(this);
     this.onSupermarketListItemPress = this.onSupermarketListItemPress.bind(this);
-    this.onExecuteButtonPress = this.onExecuteButtonPress.bind(this);
   }
 
   /**
@@ -69,14 +76,6 @@ export default class HomeScreen extends Component<Props> {
 
     // Navigate!
     this.props.navigation.navigate('ItemDetailScreen', {item: item.item});
-  }
-
-  /**
-   * When the execute button is pressed
-   */
-  onExecuteButtonPress(item) {
-    // Navigate
-    this.props.navigation.navigate('ExecutionScreen');
   }
 
   /**
@@ -112,14 +111,13 @@ export default class HomeScreen extends Component<Props> {
 
         <StatusBar backgroundColor={TRC.TotoTheme.theme.COLOR_THEME_DARK} barStyle="light-content" />
 
-        <SupermarketHeader onExecuteButtonPress={this.onExecuteButtonPress} />
+        <SupermarketHeader />
 
         <CustomItem />
 
         {dynamicCommonItemsBar}
 
         <SupermarketList  onItemPress={this.onSupermarketListItemPress}
-                          style={{flex: 1}}
                           titleOnEmpty="The list is empty!"
                           messageOnEmpty="Start adding groceries to the list by writing on the top part of the screen or by selecting one of the commonly used groceries.."
                           imageOnEmpty={require('../../img/carrot.png')}

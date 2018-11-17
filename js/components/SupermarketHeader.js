@@ -117,47 +117,14 @@ export default class SupermarketHeader extends Component {
    */
   render() {
 
-    // Left area of the header
-    let left = (
-      <View style={{flex: 1}}></View>
-    );
-
-    if (this.state.lastCost != null) left = (
-      <TouchableOpacity style={styles.lastCostContainer}>
-        <Text style={styles.lastCostLabel}>Last cost</Text>
-        <Text style={styles.lastCostValue}>{this.state.lastCost}</Text>
-      </TouchableOpacity>
-    )
-
-    // Button
-    let button;
-
-    if (this.state.currentListItemsCount > 0) button = (
-      <TotoIconButton
-            image={require('../../img/supermarket.png')}
-            size='xl'
-            onPress={this.props.onExecuteButtonPress}
-            />
-    )
-    else button = (
-      <Image source={require('../../img/supermarket.png')} style={{opacity: 0.3, width: 38, height: 38}} />
-    )
 
     return (
-      <View style={styles.container} height={this.height}>
+      <View style={styles.container} >
         <Swiper showsPagination={false}>
 
-          <View style={styles.overviewContainer}>
-            {left}
-            <View style={styles.buttonContainer}>
-              {button}
-            </View>
-            <View style={{flex: 1}}></View>
-          </View>
+          <ExpensesGraph height={140} view='years' prospection={2} />
 
-          <ExpensesGraph height={120} view='years' prospection={2} />
-
-          <ExpensesGraph height={120} view='months' prospection={5} />
+          <ExpensesGraph height={140} view='months' prospection={5} />
 
         </Swiper>
       </View>
@@ -168,29 +135,6 @@ export default class SupermarketHeader extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME_DARK,
-    height: 116,
-  },
-  overviewContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  buttonContainer: {
-    flex: 1,
-    alignItems: 'center'
-  },
-  lastCostContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  lastCostLabel: {
-    fontSize: 10,
-    color: TRC.TotoTheme.theme.COLOR_TEXT_LIGHT,
-  },
-  lastCostValue: {
-    fontSize: 20,
-    color: TRC.TotoTheme.theme.COLOR_ACCENT,
+    height: 140,
   },
 })

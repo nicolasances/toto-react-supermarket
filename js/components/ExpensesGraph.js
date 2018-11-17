@@ -20,7 +20,7 @@ export default class ExpensesGraph extends Component {
 
     // Define default width and height
     this.width = window.width;
-    this.height = this.props.height ? this.props.height : 250;
+    this.height = (this.props.height ? this.props.height : 250) - 12; // 12 cause I want some padding on the top
 
     // The view can be 'years', 'months', 'weeks'
     // Years means that the graph will show the last x years
@@ -122,7 +122,7 @@ export default class ExpensesGraph extends Component {
   render() {
 
     return (
-      <View>
+      <View style={styles.container}>
         <TotoLineChart  data={this.state.chartData}
                         height={this.height}
                         showValuePoints={this.view != 'years'}
@@ -131,6 +131,7 @@ export default class ExpensesGraph extends Component {
                         leaveMargins={this.view != 'years'}
                         areaColor={this.view == 'years' ? TRC.TotoTheme.theme.COLOR_THEME + 50 : null}
                         xAxisTransform={this.xAxisLabel}
+                        yLines={this.view == 'years' ? [100, 200] : [100]}
                         />
       </View>
     )
@@ -138,7 +139,7 @@ export default class ExpensesGraph extends Component {
 }
 
 const styles = StyleSheet.create({
-  surface: {
-    // backgroundColor: '#00ACC1',
+  container: {
+    paddingTop: 12
   },
 });
