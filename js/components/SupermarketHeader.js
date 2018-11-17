@@ -117,9 +117,19 @@ export default class SupermarketHeader extends Component {
    */
   render() {
 
+    let warningSymbol;
+
+    if (this.state.lastCost != null) warningSymbol = (
+        <View  style={{position: 'absolute', right: 6, top: 12}}>
+          <TotoIconButton image={require('../../img/warning.png')} size='xs' />
+        </View>
+    )
 
     return (
       <View style={styles.container} >
+
+        {warningSymbol}
+
         <Swiper showsPagination={false}>
 
           <ExpensesGraph height={140} view='years' prospection={2} />

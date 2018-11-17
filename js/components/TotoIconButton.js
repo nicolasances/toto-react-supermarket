@@ -8,7 +8,7 @@ import TRC from 'toto-react-components';
  * - onPress        : function called when the button is pressed
  * - secondary      : true if the button should be a secondary button
  * - image          : the image to use
- * - size           : (optional, default: 'm') can be 'l', 'xl', 'm'
+ * - size           : (optional, default: 'm') can be 'l', 'xl', 'm', 's'
  * - label          : (optional, default: none) shows a label
  */
 export default class TotoIconButton extends Component {
@@ -36,6 +36,14 @@ export default class TotoIconButton extends Component {
     else if (this.props.size == 'xl') {
       containerSize = 72;
       iconSize = 38;
+    }
+    else if (this.props.size == 's') {
+      containerSize = 24;
+      iconSize = 12;
+    }
+    else if (this.props.size == 'xs') {
+      containerSize = 20;
+      iconSize = 10;
     }
 
     // Define the sizeStyles
