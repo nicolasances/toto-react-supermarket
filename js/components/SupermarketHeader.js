@@ -4,6 +4,7 @@ import TRC from 'toto-react-components';
 import Swiper from 'react-native-swiper';
 import TotoIconButton from './TotoIconButton';
 import SupermarketAPI from '../services/SupermarketAPI';
+import ExpensesGraph from './ExpensesGraph';
 import * as config from '../Config';
 
 /**
@@ -147,16 +148,16 @@ export default class SupermarketHeader extends Component {
         <Swiper showsPagination={false}>
 
           <View style={styles.overviewContainer}>
-
             {left}
-
             <View style={styles.buttonContainer}>
               {button}
             </View>
-
             <View style={{flex: 1}}></View>
-
           </View>
+
+          <ExpensesGraph height={120} view='years' prospection={2} />
+
+          <ExpensesGraph height={120} view='months' prospection={5} />
 
         </Swiper>
       </View>

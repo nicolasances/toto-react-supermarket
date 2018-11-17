@@ -1,0 +1,144 @@
+import React, {Component} from 'react';
+import {Animated, Text, View, StyleSheet, Dimensions, ART} from 'react-native';
+import * as scale from 'd3-scale';
+import * as shape from 'd3-shape';
+import * as array from 'd3-array';
+import * as path from 'd3-path';
+import TRC from 'toto-react-components';
+import ExpensesAPI from '../services/ExpensesAPI';
+import TotoLineChart from './TotoLineChart';
+import moment from 'moment';
+
+const {Group, Shape, Surface} = ART;
+const d3 = {scale, shape, array, path};
+const window = Dimensions.get('window');
+
+export default class ExpensesGraph extends Component {
+
+  constructor(props) {
+    super(props);
+
+    // Define default width and height
+    this.width = window.width;
+    this.height = this.props.height ? this.props.height : 250;
+
+    // The view can be 'years', 'months', 'weeks'
+    // Years means that the graph will show the last x years
+    // Months means that the graph will show the last x months
+    // Weeks means that the graph will show the last x weeks
+    this.view = this.props.view == null ? 'years' : this.props.view;
+
+    // Prospection: the meaning depends of the "view" property
+    this.prospection = this.props.prospection == null ? 2 : this.props.prospection;
+
+    // Bind functions
+    this.refreshData = this.refreshData.bind(this);
+    this.onDataLoaded = this.onDataLoaded.bind(this);
+    this.xAxisLabel = this.xAxisLabel.bind(this);
+
+    // Init state
+    this.state = {
+      charData: []
+    }
+  }
+
+  /**
+   * Load component stuff
+   */
+  componentDidMount() {
+
+    // Load the data for the graph
+    this.refreshData();
+  }
+
+  /**
+   * Unmount stuff
+   */
+  componentWillUnmount() {
+
+  }
+
+  /**
+   * Reloads the data from the APIs
+   */
+  refreshData() {
+
+    if (this.view == 'years') {
+      // TODO : replace with a getSupermarketExpensesPerMonth
+      // Get the weekly expenses for SUPERMARKET
+      new ExpensesAPI().getSupermarketExpensesPerWeek(this.prospection * 52).then(this.onDataLoaded);
+    }
+    else if (this.view == 'months') {
+      // Get the weekly expenses
+      new ExpensesAPI().getSupermarketExpensesPerWeek(this.prospection * 4).then(this.onDataLoaded);
+    }
+    else {
+      // Get the weekly expenses
+      new ExpensesAPI().getSupermarketExpensesPerWeek(this.prospection).then(this.onDataLoaded);
+    }
+  }
+
+  /**
+   * When the data is loaded, create the chart data and put it in the state
+   */
+  onDataLoaded(data) {
+
+    if (data == null) return;
+
+    let chartData = [];
+
+    for (var i = 0; i < data.weeks.length; i++) {
+
+      let week = data.weeks[i];
+
+      chartData.push({
+        x: new Date(moment(week.year + '-' + week.week, 'YYYY-ww')),
+        y: week.amount
+      });
+    }
+
+    this.setState({chartData: []}, () => {this.setState({chartData: chartData})});
+
+  }
+
+  /**
+   * Defines the label of the x axis for the specified datum.
+   * Only shows the values when it's the month change: the goal is to show the months
+   */
+  xAxisLabel(datum) {
+
+    let date = moment(datum);
+    let month = date.format('M');
+    let monthOfPreviousWeek = date.subtract(7, 'days').format('M');
+
+    if (month != monthOfPreviousWeek) {
+
+      if (this.view == 'years') return moment(datum).format('MMM').substring(0, 1)
+      else return moment(datum).format('MMM')
+    }
+
+  }
+
+  render() {
+
+    return (
+      <View>
+        <TotoLineChart  data={this.state.chartData}
+                        height={this.height}
+                        showValuePoints={this.view != 'years'}
+                        valuePointsBackground={TRC.TotoTheme.theme.COLOR_THEME_DARK}
+                        valuePointsSize={3}
+                        leaveMargins={this.view != 'years'}
+                        areaColor={this.view == 'years' ? TRC.TotoTheme.theme.COLOR_THEME + 50 : null}
+                        xAxisTransform={this.xAxisLabel}
+                        />
+      </View>
+    )
+  }
+}
+
+const styles = StyleSheet.create({
+  surface: {
+    // backgroundColor: '#00ACC1',
+  },
+});
