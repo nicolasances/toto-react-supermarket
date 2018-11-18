@@ -42,6 +42,7 @@ export default class PastListsScreen extends Component<Props> {
     // Bindings
     this.refreshData = this.refreshData.bind(this);
     this.onListSelect = this.onListSelect.bind(this);
+    this.onListPaid = this.onListPaid.bind(this);
   }
 
   /**
@@ -49,7 +50,7 @@ export default class PastListsScreen extends Component<Props> {
    */
   componentDidMount() {
     // Add event listeners
-    // TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.commonItemsRequested, this.showCommonItems)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.listPaid, this.onListPaid)
 
     // Load data
     this.refreshData();
@@ -57,7 +58,7 @@ export default class PastListsScreen extends Component<Props> {
 
   componentWillUnmount() {
     // REmove event listeners
-    // TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.commonItemsRequested, this.showCommonItems)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.listPaid, this.onListPaid);
   }
 
   /**
@@ -72,6 +73,25 @@ export default class PastListsScreen extends Component<Props> {
       else list.setState({lists: []}, () => {this.setState({lists: data.lists})});
 
     });
+  }
+
+  /**
+   * When a list is paid
+   */
+  onListPaid(event) {
+
+    // Set the list as 'paid'
+    let lists = [...this.state.lists];
+
+    for (var i = 0; i < lists.length; i++) {
+      if (lists[i].id == event.context.list.id) {
+        lists[i].paid = true;
+        break;
+      }
+    }
+
+    // Update the state
+    this.setState({lists: lists});
   }
 
   /**

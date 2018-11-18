@@ -107,6 +107,14 @@ export default class SupermarketAPI {
   }
 
   /**
+   * Retrieves the specified past list
+   */
+  getPastList(id) {
+
+    return new TotoAPI().fetch('/supermarket/pastLists/' + id).then((response) => response.json());
+  }
+
+  /**
    * Retrieves the last executed list
    */
   getLastList() {

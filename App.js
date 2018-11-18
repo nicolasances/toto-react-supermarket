@@ -33,7 +33,7 @@ const RootStack = createStackNavigator({
   PastListDetailScreen: {screen: PastListDetailScreen},
 
 }, {
-  initialRouteName: 'PastListsScreen',
+  initialRouteName: 'HomeScreen',
   navigationOptions: {
     headerStyle: {
       elevation: 0,

@@ -11,6 +11,8 @@ import moment from 'moment';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
+const defaultImage = require('../../img/groceries/groceries-bag.png');
+const infoSign = require('../../img/info.png');
 
 const largeDevice = windowWidth > 600 ? true : false;
 
@@ -39,13 +41,13 @@ export default class PastListDetailScreen extends Component<Props> {
 
     this.state = {
       list: props.navigation.getParam('list'),
-      payment: {}
     }
 
     // Bindings
     this.pay = this.pay.bind(this);
     this.onListPaid = this.onListPaid.bind(this);
     this.refreshData = this.refreshData.bind(this);
+    this.onListItemPress = this.onListItemPress.bind(this);
   }
 
   /**
@@ -53,7 +55,7 @@ export default class PastListDetailScreen extends Component<Props> {
    */
   componentDidMount() {
     // Add event listeners
-    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.listPaid, this.onListPaid)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.listPaid, this.onListPaid);
 
     // Load data
     this.refreshData();
@@ -61,7 +63,7 @@ export default class PastListDetailScreen extends Component<Props> {
 
   componentWillUnmount() {
     // REmove event listeners
-    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.listPaid, this.onListPaid)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.listPaid, this.onListPaid);
   }
 
   /**
@@ -69,22 +71,21 @@ export default class PastListDetailScreen extends Component<Props> {
    */
   refreshData() {
 
-    // 1. Retrieve the expense detail
-    if (this.state.list.paymentId) {
+    // Get the list items
+    new SupermarketAPI().getPastList(this.state.list.id).then((data) => {
 
-      new ExpensesAPI().getExpense(this.state.list.paymentId).then((payment) => {
-        // Update the state
-        this.setState({payment: payment});
-      });
-    }
+      // Update the state with the list items
+      this.setState({items: data.items});
 
-    // new SupermarketAPI().getPastLists().then((data) => {
-    //
-    //   // Set the state
-    //   if (this.state.lists.length == 0) this.setState({lists: data.lists});
-    //   else list.setState({lists: []}, () => {this.setState({lists: data.lists})});
-    //
-    // });
+      // Retrieve the expense detail
+      if (data.paymentId) {
+
+        new ExpensesAPI().getExpense(data.paymentId).then((payment) => {
+          // Update the state
+          this.setState({payment: payment});
+        });
+      }
+    });
   }
 
   /**
@@ -116,8 +117,35 @@ export default class PastListDetailScreen extends Component<Props> {
     }, () => {
 
       // 2. Refresh the detail of the list
-      this.refreshData();
+      setTimeout(this.refreshData, 1500);
     });
+  }
+
+  /**
+   * Extract the data for the items of the list
+   */
+  itemDataExtractor(item) {
+
+    let image = item.item.image != null ? item.item.image : defaultImage;
+    let sign = item.item.note != null ? infoSign : null;
+
+    return {
+      title: item.item.name,
+      avatar: {
+        type: 'image',
+        value: image
+      },
+      sign: sign
+    }
+
+  }
+
+  /**
+   * When a list item gets pressed, go to the detail
+   */
+  onListItemPress(item) {
+    // Navigate!
+    this.props.navigation.navigate('ItemDetailScreen', {item: item.item});
   }
 
   /**
@@ -139,7 +167,7 @@ export default class PastListDetailScreen extends Component<Props> {
     // only visible if there is a payment
     let paymentDetail;
 
-    if (this.state.payment.id != null) paymentDetail = (
+    if (this.state.payment != null) paymentDetail = (
       <View style={styles.paymentContainer}>
         <View style={styles.paymentImgContainer}>
           <Image source={require('../../img/expenses.png')} style={{width: 28, height: 28, tintColor: TRC.TotoTheme.theme.COLOR_THEME_LIGHT}} />
@@ -160,6 +188,7 @@ export default class PastListDetailScreen extends Component<Props> {
         </View>
       </View>
     )
+    else paymentDetail = (<View style={{height: 12}}></View>)
 
     return (
       <View style={styles.container}>
@@ -181,6 +210,11 @@ export default class PastListDetailScreen extends Component<Props> {
         </View>
 
         {paymentDetail}
+
+        <TotoFlatList data={this.state.items}
+                      dataExtractor={this.itemDataExtractor}
+                      onItemPress={this.onListItemPress}
+                      />
 
       </View>
     );
