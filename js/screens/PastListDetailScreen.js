@@ -141,14 +141,14 @@ export default class PastListDetailScreen extends Component<Props> {
 
     if (this.state.payment.id != null) paymentDetail = (
       <View style={styles.paymentContainer}>
-        <View style={{marginRight: 12}}>
-          <Image source={require('../../img/expenses.png')} style={{width: 32, height: 32, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} />
+        <View style={styles.paymentImgContainer}>
+          <Image source={require('../../img/expenses.png')} style={{width: 28, height: 28, tintColor: TRC.TotoTheme.theme.COLOR_THEME_LIGHT}} />
         </View>
-        <View style={{flex: 1, marginRight: 12}}>
+        <View style={{flex: 1, marginRight: 12, justifyContent: 'center'}}>
           <Text style={styles.paymentDesc}>{this.state.payment.description}</Text>
           <Text style={styles.paymentCat}>{this.state.payment.category}</Text>
         </View>
-        <View style={{alignItems: 'flex-end'}}>
+        <View style={{alignItems: 'flex-end', justifyContent: 'center'}}>
           <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
             <Text style={styles.paymentCurrency}>{this.state.payment.currency}</Text>
             <Text style={styles.paymentAmount}>{this.state.payment.amount != null ? this.state.payment.amount.toFixed(2) : ''}</Text>
@@ -197,9 +197,20 @@ const styles = StyleSheet.create({
   },
   paymentContainer: {
     flexDirection: 'row',
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 24,
     marginVertical: 12,
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME_DARK + 50
+  },
+  paymentImgContainer: {
+    marginRight: 12,
+    borderColor: TRC.TotoTheme.theme.COLOR_THEME_LIGHT,
+    borderWidth: 2,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   paymentDesc: {
     fontSize: 16,
@@ -225,12 +236,10 @@ const styles = StyleSheet.create({
     color: TRC.TotoTheme.theme.COLOR_TEXT,
     opacity: 0.9,
     marginRight: 3,
-    marginTop: 3,
   },
   paymentAmountEuro: {
     fontSize: 10,
     color: TRC.TotoTheme.theme.COLOR_TEXT,
     opacity: 0.9,
-    marginTop: 3,
   },
 });
