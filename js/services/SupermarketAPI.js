@@ -99,11 +99,39 @@ export default class SupermarketAPI {
   }
 
   /**
+   * Retrieves the last 20 past lists
+   */
+  getPastLists() {
+
+    return new TotoAPI().fetch('/supermarket/pastLists?maxResults=20').then((response) => response.json());
+  }
+
+  /**
    * Retrieves the last executed list
    */
   getLastList() {
 
     return new TotoAPI().fetch('/supermarket/pastLists?maxResults=1').then((response) => response.json());
+  }
+
+  /**
+   * Triggers the payment of the specified list.
+   * This will generate an expense in the Expenses Toto APP.
+   * Requires a list object: {
+   *    id: id of the list
+   *    cost: cost of the list (as a string)
+   *    date: date in YYYYMMDD format (string)
+   * }
+   */
+  payList(list) {
+
+    return new TotoAPI().fetch('/supermarket/pastLists/' + list.id + '/pay', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(list)
+    }).then((response) => response.json());
   }
 
 }

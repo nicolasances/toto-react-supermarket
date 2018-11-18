@@ -19,10 +19,19 @@ export default class HomeScreen extends Component<Props> {
     // Define the Navigation options
     static navigationOptions = ({navigation}) => {
 
+      // Button to start the shopping
       let startShoppingButton = {
         image: require('../../img/supermarket.png'),
         navData: {
           screen: 'ExecutionScreen'
+        }
+      }
+
+      // Button to access the past lists and reconcile with the expenses API
+      let pastListsButton = {
+        image: require('../../img/list.png'),
+        navData: {
+          screen: 'PastListsScreen'
         }
       }
 
@@ -32,6 +41,7 @@ export default class HomeScreen extends Component<Props> {
                         color={TRC.TotoTheme.theme.COLOR_THEME_DARK}
                         titleColor={TRC.TotoTheme.theme.COLOR_TEXT_LIGHT}
                         rightButton={startShoppingButton}
+                        leftButton={pastListsButton}
                         />
       }
     }

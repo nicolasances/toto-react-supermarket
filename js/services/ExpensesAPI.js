@@ -20,4 +20,12 @@ export default class ExpensesAPI {
     return new TotoAPI().fetch('/expenses/stats/expensesPerWeek?category=SUPERMERCATO&dateGte=' + start.format('YYYYMMDD')).then((response) => response.json());
   }
 
+  /**
+   * Retrieve the specified expense
+   */
+  getExpense(expenseId) {
+
+    return new TotoAPI().fetch('/expenses/expenses/' + expenseId).then((response) => response.json());
+  }
+
 }
