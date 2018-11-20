@@ -62,6 +62,7 @@ export default class HomeScreen extends Component<Props> {
     this.showCommonItems = this.showCommonItems.bind(this);
     this.hideCommonItems = this.hideCommonItems.bind(this);
     this.onSupermarketListItemPress = this.onSupermarketListItemPress.bind(this);
+
   }
 
   /**
