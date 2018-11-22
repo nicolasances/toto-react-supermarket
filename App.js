@@ -13,6 +13,7 @@ import ExecutionCostScreen from './js/screens/ExecutionCostScreen';
 import GrabbedItemsScreen from './js/screens/GrabbedItemsScreen';
 import PastListsScreen from './js/screens/PastListsScreen';
 import PastListDetailScreen from './js/screens/PastListDetailScreen';
+import CategorizeScreen from './js/screens/CategorizeScreen';
 
 // Client Id
 // const clientId = '209706877536-p9b1uhqemeiujcd6j92edh9f48nj43m1.apps.googleusercontent.com';
@@ -31,6 +32,7 @@ const RootStack = createStackNavigator({
   GrabbedItemsScreen: {screen: GrabbedItemsScreen},
   PastListsScreen: {screen: PastListsScreen},
   PastListDetailScreen: {screen: PastListDetailScreen},
+  CategorizeScreen: {screen: CategorizeScreen},
 
 }, {
   initialRouteName: 'HomeScreen',

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Dimensions, StyleSheet, KeyboardAvoidingView, View, Text, TextInput, Image, Platform} from 'react-native';
+import {StatusBar, Dimensions, StyleSheet, KeyboardAvoidingView, View, Text, TextInput, Image, Platform} from 'react-native';
 import TotoIconButton from '../components/TotoIconButton';
 import TRC from 'toto-react-components';
 import SupermarketAPI from '../services/SupermarketAPI';
@@ -146,8 +146,18 @@ export default class ItemDetailScreen extends Component {
       ));
     }
 
+    // Manually categorize
+    buttons.push((
+      <TotoIconButton   image={require('../../img/carrot.png')}
+                        onPress={() => {this.props.navigation.navigate('CategorizeScreen', {item: this.state.item})}}
+                        key='CategorizeItem'
+                        />
+    ));
+
     return (
       <KeyboardAvoidingView style={styles.container} behavior={android ? null : 'height'}>
+
+        <StatusBar backgroundColor={TRC.TotoTheme.theme.COLOR_THEME} barStyle="default" />
 
         <View style={styles.noteContainer}>
 
