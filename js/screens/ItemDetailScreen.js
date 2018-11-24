@@ -152,7 +152,7 @@ export default class ItemDetailScreen extends Component {
     // Category
     let categoryImg = foodCategories.getImage(this.state.item.category);
     let category = categoryImg != null ? categoryImg.img60 : (
-      <Image source={defaultImage} style={{width: 60, height: 60, tintColor: TRC.TotoTheme.theme.COLOR_THEME_DARK}} />
+      <Image source={defaultImage} style={{width: 60, height: 60, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} />
     );
 
     return (
