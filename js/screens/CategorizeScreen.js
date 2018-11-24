@@ -130,12 +130,17 @@ export default class CategorizeScreen extends Component {
     let categories = this.buildCategories(this.state.categories);
 
     return (
-      <View style={styles.container} horizontal={true} >
+      <View style={styles.container}>
 
-        <StatusBar backgroundColor={TRC.TotoTheme.theme.COLOR_THEME} barStyle="default" />
+        <Text style={styles.instr}>Pick the new category!</Text>
 
-        {categories}
+        <View style={styles.categoriesContainer} horizontal={true} >
 
+          <StatusBar backgroundColor={TRC.TotoTheme.theme.COLOR_THEME} barStyle="default" />
+
+          {categories}
+
+        </View>
       </View>
     )
   }
@@ -144,12 +149,21 @@ export default class CategorizeScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
     backgroundColor: TRC.TotoTheme.theme.COLOR_THEME,
     paddingVertical: 12,
     paddingHorizontal: 6,
+    alignItems: 'center',
+  },
+  instr: {
+    color: TRC.TotoTheme.theme.COLOR_TEXT + 50,
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  categoriesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginVertical: 12,
   },
   categoryContainer: {
     margin: 12,

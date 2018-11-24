@@ -160,6 +160,12 @@ export default class ItemDetailScreen extends Component {
 
         <StatusBar backgroundColor={TRC.TotoTheme.theme.COLOR_THEME} barStyle="default" />
 
+        <View style={styles.categoryContainer}>
+          <TouchableOpacity style={styles.categoryAvatar} onPress={() => {this.props.navigation.navigate('CategorizeScreen', {item: this.state.item, pastListId: this.state.pastListId})}}>
+            {category}
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.noteContainer}>
 
           <Image  style={styles.noteImage}
@@ -180,12 +186,6 @@ export default class ItemDetailScreen extends Component {
                         width={windowWidth - 90}
                         />
           </View>
-        </View>
-
-        <View style={styles.categoryContainer}>
-          <TouchableOpacity style={styles.categoryAvatar} onPress={() => {this.props.navigation.navigate('CategorizeScreen', {item: this.state.item, pastListId: this.state.pastListId})}}>
-            {category}
-          </TouchableOpacity>
         </View>
 
         <View style={styles.buttonsContainer}>
