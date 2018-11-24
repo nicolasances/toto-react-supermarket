@@ -122,7 +122,8 @@ export default class SupermarketList extends Component {
 
       if (items[i].name != this.state.items[i].name ||
           items[i].note != this.state.items[i].note ||
-          items[i].grabbed != this.state.items[i].grabbed)
+          items[i].grabbed != this.state.items[i].grabbed ||
+          items[i].category != this.state.items[i].category)
           return true;
 
     }
