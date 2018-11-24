@@ -18,6 +18,7 @@ import TRC from 'toto-react-components';
  *                                        should be a loaded image, (provided as require(..), so already loaded)
  *                            }
  *  - onItemPress()         : a function to be called when the item is pressed
+ *  - avatarImageLoader()   : a function(item) that will have to load the avatar image and return a loaded <Image />
  */
 export default class TotoFlatList extends Component {
 

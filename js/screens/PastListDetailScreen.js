@@ -8,6 +8,7 @@ import SupermarketAPI from '../services/SupermarketAPI';
 import ExpensesAPI from '../services/ExpensesAPI';
 import * as config from '../Config';
 import moment from 'moment';
+import foodCategories from '../services/FoodCategoriesAPI';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -133,7 +134,6 @@ export default class PastListDetailScreen extends Component<Props> {
       title: item.item.name,
       avatar: {
         type: 'image',
-        value: image
       },
       sign: sign
     }
@@ -146,6 +146,23 @@ export default class PastListDetailScreen extends Component<Props> {
   onListItemPress(item) {
     // Navigate!
     this.props.navigation.navigate('ItemDetailScreen', {item: item.item, pastListId: this.state.list.id});
+  }
+
+  /**
+   * Image loader for the avatar of the list items
+   */
+  avatarImageLoader(item) {
+
+    let categoryId = item.item.category;
+
+    let img = foodCategories.getImage(categoryId);
+
+    let image = img != null ? img.img20 : (
+      <Image source={defaultImage} style={{width: 20, height: 20, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} />
+    );
+
+    return image;
+
   }
 
   /**
@@ -214,6 +231,7 @@ export default class PastListDetailScreen extends Component<Props> {
         <TotoFlatList data={this.state.items}
                       dataExtractor={this.itemDataExtractor}
                       onItemPress={this.onListItemPress}
+                      avatarImageLoader={this.avatarImageLoader}
                       />
 
       </View>
