@@ -5,6 +5,7 @@ import SupermarketAPI from '../services/SupermarketAPI';
 import TotoAPI from '../services/TotoAPI';
 import foodCategories from '../services/FoodCategoriesAPI';
 import * as config from '../Config';
+import user from '../User';
 
 export default class CategorizeScreen extends Component {
 
@@ -29,6 +30,7 @@ export default class CategorizeScreen extends Component {
     // Get the object from the navigation
     this.state = {
       item: props.navigation.getParam('item'),
+      pastListId: props.navigation.getParam('pastListId'),
       categories: []
     }
 
@@ -72,7 +74,16 @@ export default class CategorizeScreen extends Component {
    */
   updateCategory(categoryId) {
 
-    console.log(categoryId);
+    // Call the API to update the category of the element
+    // If it is a past list, update that element
+    if (this.state.pastListId) new SupermarketAPI().updateItemOfPastList(this.state.pastListId, this.state.item.name, categoryId, user.userInfo.email);
+    // If it's the current list, call another API
+    else new SupermarketAPI().updateItemOfCurrentList(this.state.item.id, {itemName: this.state.item.name, category: categoryId, userEmail: user.userInfo.email});
+
+    // TODO: throw event
+
+    // Go back
+    this.props.navigation.goBack();
 
   }
 

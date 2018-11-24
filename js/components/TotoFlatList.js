@@ -33,7 +33,7 @@ export default class TotoFlatList extends Component {
     return (
       <FlatList
         data={this.props.data}
-        renderItem={(item) => <Item item={item} dataExtractor={this.props.dataExtractor} onItemPress={this.props.onItemPress}/>}
+        renderItem={(item) => <Item item={item} avatarImageLoader={this.props.avatarImageLoader} dataExtractor={this.props.dataExtractor} onItemPress={this.props.onItemPress}/>}
         keyExtractor={(item, index) => {return 'toto-flat-list-' + index}}
         />
     )
@@ -91,7 +91,13 @@ class Item extends Component {
       }
       // If the avatar is an IMAGE
       else if (data.avatar.type == 'image') {
-        avatar = <Image source={data.avatar.value}  style={{width: 20, height: 20, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} />
+        // If there's a source:
+        if (data.avatar.value) avatar = <Image source={data.avatar.value}  style={{width: 20, height: 20, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} />
+        // If there's a configured image Loader
+        else if (this.props.avatarImageLoader) {
+          // Load the image
+          avatar = this.props.avatarImageLoader(this.state);
+        }
       }
       // For any other type of avatar, display nothing
       else {

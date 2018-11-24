@@ -17,11 +17,23 @@ class FoodCategoriesAPI {
 
         this.images.push({
           categoryId: data.categories[i].id,
-          img: this.fetchImage(data.categories[i].id, data.categories[i].image)
+          img: this.fetchImage(data.categories[i].id, data.categories[i].image, 30),
+          img20: this.fetchImage(data.categories[i].id, data.categories[i].image, 20),
+          img60: this.fetchImage(data.categories[i].id, data.categories[i].image, 60),
         });
       }
 
     })
+
+    // Bind
+    this.getImage = this.getImage.bind(this);
+  }
+
+  /**
+   * Specifies if the images have been loaded
+   */
+  loaded() {
+    return this.images != null;
   }
 
   /**
@@ -40,10 +52,12 @@ class FoodCategoriesAPI {
   /**
    * Prefetch an image
    */
-  fetchImage(categoryId, relativeUrl) {
+  fetchImage(categoryId, relativeUrl, size) {
+
+    let s = size == null ? 32 : size;
 
     return (
-      <Image key={categoryId} style={{width: 32, height: 32, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} source={{uri: 'https://imatzdev.it/apis/diet/' + relativeUrl, headers: {'Authorization': 'Basic c3RvOnRvdG8='}}} />
+      <Image key={categoryId} style={{width: size, height: size, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} source={{uri: 'https://imatzdev.it/apis/diet/' + relativeUrl, headers: {'Authorization': 'Basic c3RvOnRvdG8='}}} />
     )
   }
 

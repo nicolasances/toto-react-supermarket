@@ -4,6 +4,7 @@ import TRC from 'toto-react-components';
 import SupermarketAPI from '../services/SupermarketAPI';
 import TotoFlatList from './TotoFlatList';
 import * as config from '../Config';
+import foodCategories from '../services/FoodCategoriesAPI';
 
 const defaultImage = require('../../img/groceries/groceries-bag.png');
 const infoSign = require('../../img/info.png');
@@ -136,19 +137,6 @@ export default class SupermarketList extends Component {
 
     if (items == null) return;
 
-    // For every item assign the image
-    for (var i = 0; i < items.length; i++) {
-
-      // Get the category of the item, if any
-      let categoryId = items[i].category;
-
-      // If there's a category id, retrieve the image of that category
-      let category = categoryId != null ? new DietAPI().getGroceryCategory(categoryId) : null;
-
-      // Assign the image to the item
-      items[i].image = category == null ? defaultImage : category.image;
-    }
-
     // Update the state with the retrieved items
     this.setState({items: []}, () => {this.setState({items: items})});
 
@@ -220,17 +208,32 @@ export default class SupermarketList extends Component {
    */
   createItem(item) {
 
-    let image = item.item.image != null ? item.item.image : defaultImage;
     let sign = item.item.note != null ? infoSign : null;
 
     return {
       title: item.item.name,
       avatar: {
-        type: 'image',
-        value: image
+        type: 'image'
       },
       sign: sign
     }
+
+  }
+
+  /**
+   * Image loader for the specified item
+   */
+  avatarImageLoader(item) {
+
+    let categoryId = item.item.category;
+
+    let img = foodCategories.getImage(categoryId);
+
+    let image = img != null ? img.img20 : (
+      <Image source={defaultImage} style={{width: 20, height: 20, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} />
+    );
+
+    return image;
 
   }
 
@@ -261,6 +264,7 @@ export default class SupermarketList extends Component {
               data={this.state.items}
               dataExtractor={this.createItem}
               onItemPress={this.props.onItemPress}
+              avatarImageLoader={this.avatarImageLoader}
               />
       </ScrollView>
     )

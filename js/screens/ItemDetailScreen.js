@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
-import {StatusBar, Dimensions, StyleSheet, KeyboardAvoidingView, View, Text, TextInput, Image, Platform} from 'react-native';
+import {TouchableOpacity, StatusBar, Dimensions, StyleSheet, KeyboardAvoidingView, View, Text, TextInput, Image, Platform} from 'react-native';
 import TotoIconButton from '../components/TotoIconButton';
 import TRC from 'toto-react-components';
 import SupermarketAPI from '../services/SupermarketAPI';
 import user from '../User';
 import * as config from '../Config';
+import foodCategories from '../services/FoodCategoriesAPI';
 
 const windowWidth = Dimensions.get('window').width;
 
+const defaultImage = require('../../img/groceries/groceries-bag.png');
 const android = Platform.OS == 'android';
 
 export default class ItemDetailScreen extends Component {
@@ -34,6 +36,7 @@ export default class ItemDetailScreen extends Component {
     this.state = {
       item: props.navigation.getParam('item'),
       itemNote: props.navigation.getParam('item').note,
+      pastListId: props.navigation.getParam('pastListId'),
     }
 
     // Set some props
@@ -146,13 +149,11 @@ export default class ItemDetailScreen extends Component {
       ));
     }
 
-    // Manually categorize
-    buttons.push((
-      <TotoIconButton   image={require('../../img/carrot.png')}
-                        onPress={() => {this.props.navigation.navigate('CategorizeScreen', {item: this.state.item})}}
-                        key='CategorizeItem'
-                        />
-    ));
+    // Category
+    let categoryImg = foodCategories.getImage(this.state.item.category);
+    let category = categoryImg != null ? categoryImg.img60 : (
+      <Image source={defaultImage} style={{width: 60, height: 60, tintColor: TRC.TotoTheme.theme.COLOR_THEME_DARK}} />
+    );
 
     return (
       <KeyboardAvoidingView style={styles.container} behavior={android ? null : 'height'}>
@@ -179,6 +180,12 @@ export default class ItemDetailScreen extends Component {
                         width={windowWidth - 90}
                         />
           </View>
+        </View>
+
+        <View style={styles.categoryContainer}>
+          <TouchableOpacity style={styles.categoryAvatar} onPress={() => {this.props.navigation.navigate('CategorizeScreen', {item: this.state.item, pastListId: this.state.pastListId})}}>
+            {category}
+          </TouchableOpacity>
         </View>
 
         <View style={styles.buttonsContainer}>
@@ -222,6 +229,19 @@ const styles = StyleSheet.create({
   },
   noteText: {
     color: TRC.TotoTheme.theme.COLOR_TEXT
+  },
+  categoryContainer: {
+    alignItems: 'center',
+    marginVertical: 12,
+  },
+  categoryAvatar: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 120,
+    width: 120,
+    borderRadius: 60,
+    borderWidth: 2,
+    borderColor: TRC.TotoTheme.theme.COLOR_TEXT,
   },
   buttonsContainer: { 
     flexDirection: 'row',

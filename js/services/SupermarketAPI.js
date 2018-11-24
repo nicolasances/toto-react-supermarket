@@ -142,4 +142,23 @@ export default class SupermarketAPI {
     }).then((response) => response.json());
   }
 
+  /**
+   * Updates the specified item of the specified past list
+   */
+  updateItemOfPastList(listId, itemName, categoryId, userEmail) {
+
+    return new TotoAPI().fetch('/supermarket/pastLists/' + listId + '/items/' + itemName, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        category: categoryId,
+        itemName: itemName,
+        userEmail: userEmail
+      })
+    }).then((response) => response.json());
+
+  }
+
 }

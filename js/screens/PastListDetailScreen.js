@@ -145,7 +145,7 @@ export default class PastListDetailScreen extends Component<Props> {
    */
   onListItemPress(item) {
     // Navigate!
-    this.props.navigation.navigate('ItemDetailScreen', {item: item.item});
+    this.props.navigation.navigate('ItemDetailScreen', {item: item.item, pastListId: this.state.list.id});
   }
 
   /**
