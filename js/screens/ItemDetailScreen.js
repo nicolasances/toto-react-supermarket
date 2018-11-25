@@ -46,6 +46,7 @@ export default class ItemDetailScreen extends Component {
     this.deleteItem = this.deleteItem.bind(this);
     this.updateItem = this.updateItem.bind(this);
     this.grabItem = this.grabItem.bind(this);
+    this.onItemCategorized = this.onItemCategorized.bind(this);
 
   }
 
@@ -53,13 +54,33 @@ export default class ItemDetailScreen extends Component {
    * On component mount
    */
   componentDidMount() {
-
+    // Subscribe to events
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.itemCategorized, this.onItemCategorized);
   }
 
   /**
    * On component unmount
    */
   componentWillUnmount() {
+    // Subscribe to events
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.itemCategorized, this.onItemCategorized);
+  }
+
+  /**
+   * When an item gets categorized, update pictures
+   */
+  onItemCategorized(event) {
+
+    // Get the data from the event
+    let categoryId = event.context.newCategoryId;
+
+    let item = {...this.state.item};
+
+    // Update the item
+    item.category = categoryId;
+
+    // Update the state
+    this.setState({item: item});
 
   }
 
