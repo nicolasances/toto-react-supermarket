@@ -12,4 +12,5 @@ export const EVENTS = {
   itemGrabbed: 'itemGrabbed', // An item has been grabbed at the supermarket
   listClosed: 'listClosed', // The current list has been closed
   listPaid: 'listPaid', // The list has been paid
+  itemCategorized: 'itemCategorized', // The list has been paid
 }

@@ -80,7 +80,8 @@ export default class CategorizeScreen extends Component {
     // If it's the current list, call another API
     else new SupermarketAPI().updateItemOfCurrentList(this.state.item.id, {itemName: this.state.item.name, category: categoryId, userEmail: user.userInfo.email});
 
-    // TODO: throw event
+    // throw event
+    TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.itemCategorized, context: {}});
 
     // Go back
     this.props.navigation.goBack();
