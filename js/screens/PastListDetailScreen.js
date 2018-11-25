@@ -49,6 +49,7 @@ export default class PastListDetailScreen extends Component<Props> {
     this.onListPaid = this.onListPaid.bind(this);
     this.refreshData = this.refreshData.bind(this);
     this.onListItemPress = this.onListItemPress.bind(this);
+    this.onItemCategorized = this.onItemCategorized.bind(this);
   }
 
   /**
@@ -57,6 +58,7 @@ export default class PastListDetailScreen extends Component<Props> {
   componentDidMount() {
     // Add event listeners
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.listPaid, this.onListPaid);
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.itemCategorized, this.onItemCategorized);
 
     // Load data
     this.refreshData();
@@ -65,6 +67,30 @@ export default class PastListDetailScreen extends Component<Props> {
   componentWillUnmount() {
     // REmove event listeners
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.listPaid, this.onListPaid);
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.itemCategorized, this.onItemCategorized);
+  }
+
+  /**
+   * When an item gets categorized, update pictures
+   */
+  onItemCategorized(event) {
+
+    // Get the data from the event
+    let itemName = event.context.itemName;
+    let categoryId = event.context.newCategoryId;
+
+    let items = this.state.items.slice(0);
+
+    // Find the right item and update it
+    for (var i = 0; i < items.length; i++) {
+
+      if (items[i].name == itemName) items[i].category = categoryId;
+
+    }
+
+    // Update the state
+    this.setState({items: items});
+
   }
 
   /**
