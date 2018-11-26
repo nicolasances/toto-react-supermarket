@@ -3,6 +3,7 @@ import {ScrollView, View, Text, StyleSheet, Image, TouchableOpacity, AppState} f
 import TRC from 'toto-react-components';
 import SupermarketAPI from '../services/SupermarketAPI';
 import TotoFlatList from './TotoFlatList';
+import TotoIconButton from './TotoIconButton';
 import * as config from '../Config';
 import foodCategories from '../services/FoodCategoriesAPI';
 
@@ -20,6 +21,8 @@ const infoSign = require('../../img/info.png');
  * - grabbed              : (optional, default = false) true to show the items that
  *                          have been grabbed and put in the cart
  * - onImageOnEmptyPress  : (optional) callback to call when the image on empty is pressed
+ * - searchAction         : (optioanl, default = null) if I can search in the groceries list, this is the action that will
+ *                          be called when pressing the search button.
  */
 export default class SupermarketList extends Component {
 
@@ -45,6 +48,7 @@ export default class SupermarketList extends Component {
     this.onItemAdded = this.onItemAdded.bind(this);
     this.onItemUpdated = this.onItemUpdated.bind(this);
     this.onItemGrabbed = this.onItemGrabbed.bind(this);
+    this.onSearchPress = this.onSearchPress.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     this.hasChanged = this.hasChanged.bind(this);
     this.refreshList = this.refreshList.bind(this);
@@ -186,6 +190,17 @@ export default class SupermarketList extends Component {
   }
 
   /**
+   * When the seach button is pressed, call the appropriate action
+   */
+  onSearchPress() {
+
+    if (!this.props.searchAction) return;
+
+    // Go to the grocery selection
+    this.props.searchAction();
+  }
+
+  /**
    * Loads the data from the API.
    * Checks if the data has changed with the current version present in this.state.items
    */
@@ -256,6 +271,18 @@ export default class SupermarketList extends Component {
       </View>
     )
 
+    // Show the search button if this list is modifiable
+    let searchButton;
+
+    if (this.props.searchAction) searchButton = (
+      <View style={{alignItems: 'flex-start', paddingHorizontal: 3, paddingVertical: 6}}>
+        <TotoIconButton size='m'
+                        image={require('../../img/search.png')}
+                        onPress={this.onSearchPress}
+                        />
+      </View>
+    )
+
     return (
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -267,6 +294,9 @@ export default class SupermarketList extends Component {
               onItemPress={this.props.onItemPress}
               avatarImageLoader={this.avatarImageLoader}
               />
+
+        {searchButton}
+
       </ScrollView>
     )
   }

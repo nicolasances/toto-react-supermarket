@@ -15,7 +15,8 @@ export default class SupermarketAPI {
   postItemInCurrentList(item) {
 
     let data = {
-      name: item.name
+      name: item.name,
+      category: item.category
     };
 
     // Post the data

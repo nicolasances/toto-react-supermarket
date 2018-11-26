@@ -13,4 +13,5 @@ export const EVENTS = {
   listClosed: 'listClosed', // The current list has been closed
   listPaid: 'listPaid', // The list has been paid
   itemCategorized: 'itemCategorized', // The list has been paid
+  grocerySelected: 'grocerySelected', // The list has been paid
 }

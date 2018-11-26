@@ -62,6 +62,8 @@ export default class HomeScreen extends Component<Props> {
     this.showCommonItems = this.showCommonItems.bind(this);
     this.hideCommonItems = this.hideCommonItems.bind(this);
     this.onSupermarketListItemPress = this.onSupermarketListItemPress.bind(this);
+    this.onSearchPress = this.onSearchPress.bind(this);
+    this.onGrocerySelected = this.onGrocerySelected.bind(this);
 
   }
 
@@ -72,12 +74,14 @@ export default class HomeScreen extends Component<Props> {
     // Add event listeners
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.commonItemsRequested, this.showCommonItems)
     TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.commonItemsDismissed, this.hideCommonItems)
+    TRC.TotoEventBus.bus.subscribeToEvent(config.EVENTS.grocerySelected, this.onGrocerySelected)
   }
 
   componentWillUnmount() {
     // REmove event listeners
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.commonItemsRequested, this.showCommonItems)
     TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.commonItemsDismissed, this.hideCommonItems)
+    TRC.TotoEventBus.bus.unsubscribeToEvent(config.EVENTS.grocerySelected, this.onGrocerySelected)
   }
 
   /**
@@ -87,6 +91,44 @@ export default class HomeScreen extends Component<Props> {
 
     // Navigate!
     this.props.navigation.navigate('ItemDetailScreen', {item: item.item});
+  }
+
+  /**
+   * When the seach button is pressed, navigate to the grocery categories list
+   */
+  onSearchPress() {
+
+    let navKey = 'Home' + Math.random();
+
+    this.props.navigation.navigate({
+      routeName: 'GroceriesCategoriesScreen',
+      params: {
+        grocerySelectionMode: {
+          active: true,
+          referer: navKey
+        }
+      },
+      key: navKey
+    })
+  }
+
+  /**
+   * Reacts when a grocery is selected from the search groceries.
+   * It adds the grocery to the current list
+   */
+  onGrocerySelected(event) {
+
+    console.log(event.context);
+
+    let itemName = event.context.grocery.name;
+    let category = event.context.grocery.category;
+
+    // Save the new item to the supermarket list
+    new SupermarketAPI().postItemInCurrentList({name: itemName, category: category}).then((data) => {
+      // Post an event to notify that the item has been added
+      TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.itemAdded});
+
+    });
   }
 
   /**
@@ -132,6 +174,7 @@ export default class HomeScreen extends Component<Props> {
                           titleOnEmpty="The list is empty!"
                           messageOnEmpty="Start adding groceries to the list by writing on the top part of the screen or by selecting one of the commonly used groceries.."
                           imageOnEmpty={require('../../img/carrot.png')}
+                          searchAction={this.onSearchPress}
                           />
 
       </View>
