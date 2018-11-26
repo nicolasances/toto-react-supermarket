@@ -274,8 +274,12 @@ export default class SupermarketList extends Component {
     // Show the search button if this list is modifiable
     let searchButton;
 
+    let searchButtonStyle = {alignItems: 'flex-start', paddingHorizontal: 3, paddingVertical: 6};
+
+    if (emptyMessage) searchButtonStyle.alignItems = 'center';
+
     if (this.props.searchAction) searchButton = (
-      <View style={{alignItems: 'flex-start', paddingHorizontal: 3, paddingVertical: 6}}>
+      <View style={searchButtonStyle}>
         <TotoIconButton size='m'
                         image={require('../../img/search.png')}
                         onPress={this.onSearchPress}
