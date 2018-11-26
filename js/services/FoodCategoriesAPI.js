@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Image} from 'react-native';
 import TotoAPI from './TotoAPI';
 import TRC from 'toto-react-components';
+import * as config from '../Config';
 
 class FoodCategoriesAPI {
 
@@ -24,6 +25,10 @@ class FoodCategoriesAPI {
       }
 
     })
+
+    // Auth logic
+    this.authorization = {'Authorization': config.AUTH}
+    this.baseUrl = config.API_URL + '/diet/';
 
     // Bind
     this.getImage = this.getImage.bind(this);
@@ -57,7 +62,9 @@ class FoodCategoriesAPI {
     let s = size == null ? 32 : size;
 
     return (
-      <Image key={categoryId} style={{width: size, height: size, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}} source={{uri: 'https://imatzdev.it/apis/diet/' + relativeUrl, headers: {'Authorization': 'Basic c3RvOnRvdG8='}}} />
+      <Image  key={categoryId}
+              style={{width: size, height: size, tintColor: TRC.TotoTheme.theme.COLOR_TEXT}}
+              source={{uri: this.baseUrl + relativeUrl, headers: this.authorization}} />
     )
   }
 
