@@ -7,6 +7,9 @@ import moment from 'moment';
 export default class ExpensesAPI {
 
   /**
+   *
+   * ATTENTION!!!! THE API IS NOT AVAILABLE ANYMORE!!!
+   *
    * Retrieves the supermarket expenses.
    * Parameters:
    * - numberOfWeeks
@@ -18,6 +21,16 @@ export default class ExpensesAPI {
     let start = moment().startOf('week').subtract(numberOfWeeks, 'weeks');
 
     return new TotoAPI().fetch('/expenses/stats/expensesPerWeek?category=SUPERMERCATO&dateGte=' + start.format('YYYYMMDD')).then((response) => response.json());
+  }
+
+  /**
+   * Retrieves the supermarket expenses.
+   * Parameters:
+   * - numberOfWeeks
+   */
+  getSupermarketExpensesPerMonth(user, yearMonthGte) {
+
+    return new TotoAPI().fetch('/expenses/stats/expensesPerMonth?user=' + user + '&category=SUPERMERCATO&yearMonthGte=' + yearMonthGte).then((response) => response.json());
   }
 
   /**

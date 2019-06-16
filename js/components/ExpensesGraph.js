@@ -8,6 +8,7 @@ import TRC from 'toto-react-components';
 import ExpensesAPI from '../services/ExpensesAPI';
 import TotoLineChart from './TotoLineChart';
 import moment from 'moment';
+import user from '../User';
 
 const {Group, Shape, Surface} = ART;
 const d3 = {scale, shape, array, path};
@@ -64,9 +65,13 @@ export default class ExpensesGraph extends Component {
   refreshData() {
 
     if (this.view == 'years') {
+
+      let yearMonthGte = moment().subtract(this.prospection * 12, 'months').format('YYYYMM');
+
       // TODO : replace with a getSupermarketExpensesPerMonth
       // Get the weekly expenses for SUPERMARKET
-      new ExpensesAPI().getSupermarketExpensesPerWeek(this.prospection * 52).then(this.onDataLoaded);
+      if (user && user.userInfo)
+        new ExpensesAPI().getSupermarketExpensesPerMonth(user.userInfo.email, yearMonthGte).then(this.onDataLoaded);
     }
     else if (this.view == 'months') {
       // Get the weekly expenses
@@ -87,13 +92,13 @@ export default class ExpensesGraph extends Component {
 
     let chartData = [];
 
-    for (var i = 0; i < data.weeks.length; i++) {
+    for (var i = 0; i < data.months.length; i++) {
 
-      let week = data.weeks[i];
+      let month = data.months[i];
 
       chartData.push({
-        x: new Date(moment(week.year + '-' + week.week, 'YYYY-ww')),
-        y: week.amount
+        x: new Date(moment(month.yearMonth + '01', 'YYYYMMDD')),
+        y: month.amount
       });
     }
 
@@ -129,7 +134,6 @@ export default class ExpensesGraph extends Component {
                         valuePointsBackground={TRC.TotoTheme.theme.COLOR_THEME_DARK}
                         valuePointsSize={3}
                         leaveMargins={this.view != 'years'}
-                        areaColor={this.view == 'years' ? TRC.TotoTheme.theme.COLOR_THEME + 50 : null}
                         xAxisTransform={this.xAxisLabel}
                         yLines={this.view == 'years' ? [100, 200] : [100]}
                         />

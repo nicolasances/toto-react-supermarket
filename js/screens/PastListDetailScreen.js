@@ -9,6 +9,7 @@ import ExpensesAPI from '../services/ExpensesAPI';
 import * as config from '../Config';
 import moment from 'moment';
 import foodCategories from '../services/FoodCategoriesAPI';
+import user from '../User';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -120,7 +121,7 @@ export default class PastListDetailScreen extends Component<Props> {
    */
   pay() {
 
-    new SupermarketAPI().payList(this.state.list).then((data) => {
+    new SupermarketAPI().payList({...this.state.list, user: user.userInfo.email}).then((data) => {
 
       // Trigger an event
       TRC.TotoEventBus.bus.publishEvent({name: config.EVENTS.listPaid, context: {list: this.state.list}});

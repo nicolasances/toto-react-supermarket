@@ -130,6 +130,7 @@ export default class SupermarketAPI {
    *    id: id of the list
    *    cost: cost of the list (as a string)
    *    date: date in YYYYMMDD format (string)
+   *    user: user email
    * }
    */
   payList(list) {

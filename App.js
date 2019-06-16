@@ -78,14 +78,12 @@ export default class App extends Component {
 
       // If there is a result && the result is the user info (and not false)
       if (result != null && result != false) {
-        // Update the state and set the user info
-        this.setState({
-          isSignedIn: true,
-          result // userInfo
-        }, () => {
-          result().then((r) => {
-            // Update the global user
-            user.setUserInfo(r.user);
+        result().then((r) => {
+          // Update the global user
+          if (r) user.setUserInfo(r.user);
+          // Update the state and set the user info
+          this.setState({
+            isSignedIn: r != null,
           });
         });
       }
@@ -106,7 +104,7 @@ export default class App extends Component {
    */
   checkLoadedState() {
 
-    if (!foodCategories.loaded) {
+    if (!foodCategories.loaded || !user || !user.userInfo) {
       setTimeout(this.checkLoadedState, 200);
       return;
     }

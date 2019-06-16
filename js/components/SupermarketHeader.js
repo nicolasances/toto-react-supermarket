@@ -132,9 +132,7 @@ export default class SupermarketHeader extends Component {
 
         <Swiper showsPagination={false}>
 
-          <ExpensesGraph height={140} view='years' prospection={2} />
-
-          <ExpensesGraph height={140} view='months' prospection={5} />
+          <ExpensesGraph height={144} view='years' prospection={2} />
 
         </Swiper>
       </View>
